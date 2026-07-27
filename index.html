@@ -33,15 +33,9 @@
         .desktop-bg { display: none; }
         .mobile-bg { display: block; }
 
-        /* Membuat layar transisi sedikit gelap agar Card Login lebih menonjol */
-        #login-overlay {
-            background: rgba(0, 0, 0, 0.4); 
-        }
-        body.dark-mode #login-overlay {
-            background: rgba(0, 0, 0, 0.7);
-        }
+        #login-overlay { background: rgba(0, 0, 0, 0.4); }
+        body.dark-mode #login-overlay { background: rgba(0, 0, 0, 0.7); }
 
-        /* Media Query: Tampilkan video PC jika layar minimal 768px */
         @media (min-width: 768px) {
             .desktop-bg { display: block; }
             .mobile-bg { display: none; }
@@ -105,55 +99,20 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* SPLASH SCREEN ANIMATION PROFESSIONAL */
-        #splash-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color); z-index: 99999;
-            display: flex; align-items: center; justify-content: center;
-            flex-direction: column;
-            transition: opacity 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.8s ease;
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-        }
-        .splash-logo-container {
-            width: 90px; height: 90px;
-            display: flex; align-items: flex-end; justify-content: space-evenly;
-            margin-bottom: 25px; padding: 20px;
-            background: var(--card-bg); border-radius: 24px;
-            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.15);
-            border: 1px solid var(--card-border);
-            animation: pulseGlow 2s infinite alternate;
-        }
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 15px 35px rgba(139, 92, 246, 0.1); transform: translateY(0); }
-            100% { box-shadow: 0 25px 45px rgba(59, 130, 246, 0.3); transform: translateY(-5px); }
-        }
-        .splash-bar {
-            width: 10px; background: linear-gradient(135deg, #8B5CF6, #3B82F6);
-            border-radius: 6px;
-            animation: growBar 1s ease-in-out infinite alternate;
-        }
-        .bar1 { height: 40%; animation-delay: 0s; }
-        .bar2 { height: 75%; animation-delay: 0.2s; }
-        .bar3 { height: 100%; animation-delay: 0.4s; }
+        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 99999; display: flex; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.8s ease; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        .splash-logo-container { width: 90px; height: 90px; display: flex; align-items: flex-end; justify-content: space-evenly; margin-bottom: 25px; padding: 20px; background: var(--card-bg); border-radius: 24px; box-shadow: 0 15px 35px rgba(139, 92, 246, 0.15); border: 1px solid var(--card-border); animation: pulseGlow 2s infinite alternate; }
+        @keyframes pulseGlow { 0% { box-shadow: 0 15px 35px rgba(139, 92, 246, 0.1); transform: translateY(0); } 100% { box-shadow: 0 25px 45px rgba(59, 130, 246, 0.3); transform: translateY(-5px); } }
+        .splash-bar { width: 10px; background: linear-gradient(135deg, #8B5CF6, #3B82F6); border-radius: 6px; animation: growBar 1s ease-in-out infinite alternate; }
+        .bar1 { height: 40%; animation-delay: 0s; } .bar2 { height: 75%; animation-delay: 0.2s; } .bar3 { height: 100%; animation-delay: 0.4s; }
         @keyframes growBar { 0% { height: 20%; opacity: 0.6; } 100% { height: 100%; opacity: 1; } }
-        
-        .splash-text {
-            font-size: 34px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px;
-            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            opacity: 0; animation: slideUpIn 0.8s ease-out forwards 0.2s;
-        }
-        .splash-subtext {
-            font-size: 11px; font-weight: 700; color: var(--text-sub);
-            letter-spacing: 3px; text-transform: uppercase;
-            opacity: 0; animation: slideUpIn 0.8s ease-out forwards 0.4s;
-        }
+        .splash-text { font-size: 34px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; background: linear-gradient(135deg, #8B5CF6, #3B82F6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; opacity: 0; animation: slideUpIn 0.8s ease-out forwards 0.2s; }
+        .splash-subtext { font-size: 11px; font-weight: 700; color: var(--text-sub); letter-spacing: 3px; text-transform: uppercase; opacity: 0; animation: slideUpIn 0.8s ease-out forwards 0.4s; }
 
         .bg-bubble { position: fixed; border-radius: 50%; z-index: -1; filter: blur(30px); transition: opacity 0.5s; }
         .bubble-1 { width: 300px; height: 300px; top: -50px; left: -100px; animation: floatBubble1 15s ease-in-out infinite; background: linear-gradient(135deg, rgba(192, 132, 252, 0.4), rgba(96, 165, 250, 0.3)); }
         .bubble-2 { width: 250px; height: 250px; bottom: 15%; right: -80px; animation: floatBubble2 18s ease-in-out infinite 2s; background: linear-gradient(135deg, rgba(251, 191, 36, 0.3), rgba(248, 113, 113, 0.2)); }
         body.dark-mode .bubble-1 { background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(59, 130, 246, 0.2)); }
         body.dark-mode .bubble-2 { background: linear-gradient(135deg, rgba(217, 119, 6, 0.3), rgba(220, 38, 38, 0.2)); }
-
         .ani-fade-in { animation: fadeIn 0.5s ease-out forwards; }
 
         /* AUTH (LOGIN/REGISTER/RESET) */
@@ -210,6 +169,9 @@
         .progress-bar { height: 10px; background: linear-gradient(90deg, #8B5CF6, #F59E0B); border-radius: 20px; width: 0%; transition: width 1.5s cubic-bezier(0.1, 0.8, 0.25, 1); position: relative; overflow: hidden;}
         .progress-text { display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; opacity: 0.9; margin-top: 8px; }
 
+        .btn-tarik-tabungan { margin-top: 15px; width: 100%; padding: 12px; border-radius: 16px; border: 1px dashed rgba(255,255,255,0.5); background: rgba(255,255,255,0.15); color: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: var(--transition); display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn-tarik-tabungan:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+
         .wallet-active-card { background: var(--active-wallet-grad); backdrop-filter: var(--glass-blur); border-radius: 24px; padding: 20px 24px; margin-bottom: 20px; color: #FFFFFF; border: 1px solid rgba(255,255,255,0.2); animation: floatOrganic 6s ease-in-out infinite 1s; box-shadow: var(--shadow-md); transition: background 0.5s ease;}
         body:not(.dark-mode) .wallet-active-card { color: #5C4A33; }
         .wallet-title { font-size: 11px; font-weight: 700; text-transform: uppercase; opacity: 0.8; display: flex; align-items: center; gap: 6px; }
@@ -248,41 +210,9 @@
         .search-container input { padding-left: 45px; }
 
         /* QUICK FILTERS */
-        .quick-filters { 
-            display: flex; 
-            gap: 10px; 
-            margin-top: 5px; 
-            margin-bottom: 20px; 
-            overflow-x: auto; 
-            padding-bottom: 10px; 
-            scrollbar-width: none; 
-            -ms-overflow-style: none; 
-            align-items: center; 
-            width: 100%; 
-        }
+        .quick-filters { display: flex; gap: 10px; margin-top: 5px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; -ms-overflow-style: none; align-items: center; width: 100%; }
         .quick-filters::-webkit-scrollbar { display: none; }
-        .qf-chip { 
-            flex-shrink: 0; 
-            padding: 8px 16px; 
-            border-radius: 20px; 
-            font-size: 11.5px; 
-            font-weight: 600; 
-            background: var(--input-bg); 
-            color: var(--text-sub); 
-            border: 1px solid var(--card-border); 
-            cursor: pointer; 
-            transition: var(--transition); 
-            white-space: nowrap; 
-            margin: 0; 
-            box-shadow: none; 
-            text-transform: none; 
-            letter-spacing: normal; 
-            width: auto; 
-            line-height: normal; 
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center; 
-        }
+        .qf-chip { flex-shrink: 0; padding: 8px 16px; border-radius: 20px; font-size: 11.5px; font-weight: 600; background: var(--input-bg); color: var(--text-sub); border: 1px solid var(--card-border); cursor: pointer; transition: var(--transition); white-space: nowrap; margin: 0; box-shadow: none; text-transform: none; letter-spacing: normal; width: auto; line-height: normal; display: inline-flex; align-items: center; justify-content: center; }
         .qf-chip:hover { transform: translateY(-2px); border-color: rgba(139, 92, 246, 0.4); box-shadow: var(--shadow-md); }
         .qf-chip.active { background: #8B5CF6; color: white; border-color: #8B5CF6; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3); }
 
@@ -346,11 +276,7 @@
         .btn-modal-action.ghost-red:hover { background: rgba(239, 68, 68, 0.25); border-color: rgba(239, 68, 68, 0.4); transform: translateY(-2px); }
 
         .btn-pengumuman { animation: pulseGlowBtn 2s infinite; }
-        @keyframes pulseGlowBtn {
-            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); transform: scale(1); }
-            70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); transform: scale(1.02); }
-            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); transform: scale(1); }
-        }
+        @keyframes pulseGlowBtn { 0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); transform: scale(1); } 70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); transform: scale(1.02); } 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); transform: scale(1); } }
         .btn-pengumuman:hover { animation: none; transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 25px rgba(59, 130, 246, 0.4); }
 
         .fab-add { position: fixed; bottom: max(30px, env(safe-area-inset-bottom)); right: calc(50vw - 220px); width: 60px; height: 60px; background: linear-gradient(135deg, #8B5CF6, #6D28D9); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 400; box-shadow: 0 10px 25px rgba(109, 40, 217, 0.4); cursor: pointer; z-index: 9999; transition: var(--transition); border: none; outline: none; animation: slideUpIn 1s ease-out; }
@@ -618,6 +544,24 @@
     </div>
 </div>
 
+<div id="modal-tarik-tabungan" class="modal-overlay" style="display: none;">
+    <div class="modal-box modal-sm" style="text-align: center;">
+        <div class="modal-header">
+            <h3 style="margin: 0 auto;">🏧 Tarik Tabungan</h3>
+            <button class="btn-close" onclick="tutupModalTarik()" style="position: absolute; right: 20px;">✖</button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size: 12px; color: var(--text-sub); margin-bottom: 20px; line-height: 1.5;">Masukkan nominal saldo yang ingin dicairkan dari tabungan kembali ke dompet utama.</p>
+            
+            <div class="form-group">
+                <input type="text" id="input-tarik-tabungan" placeholder="Contoh: 50.000" inputmode="numeric" oninput="formatRupiahModal(this)">
+            </div>
+            
+            <button id="btn-proses-tarik" class="btn-modal-action blue" onclick="prosesTarikTabungan()">Cairkan Saldo ✨</button>
+        </div>
+    </div>
+</div>
+
 <div id="limit-modal" class="modal-overlay" style="display: none;">
     <div class="modal-box modal-sm">
         <div class="modal-header"><h3>💸 Limit Pengeluaran</h3><button class="btn-close" onclick="closeLimitModal()">✖</button></div>
@@ -676,6 +620,8 @@
         <div class="progress-container"><div class="progress-bar" id="p-bar"></div></div>
         <div class="progress-text"><span id="t-motivasi">Memuat...</span><span id="p-percent">0%</span></div>
         <div id="t-target-label" style="font-size: 10px; font-weight: 600; opacity: 0.8; margin-top: 4px; text-align: right;">Target: Belum diatur</div>
+        
+        <button class="btn-tarik-tabungan" onclick="bukaModalTarik()">🏧 Tarik Saldo Tabungan</button>
     </div>
 
     <div class="wallet-active-card">
@@ -751,6 +697,7 @@
     let batasanRender = 15; 
     let isSaldoHidden = localStorage.getItem('rekapku_sensor') === 'true';
     let activeQuickFilter = 'Semua';
+    let totalSaldoTabunganGlobal = 0; // Digunakan untuk validasi tarik tabungan
 
     // ---------------- UTILITAS FORMAT ANGKA ----------------
     const rp = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
@@ -1073,8 +1020,15 @@
             osc.start(); gain.gain.setValueAtTime(0.1, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.3); osc.stop(ctx.currentTime + 0.3);
         } catch (e) {}
     }
+    
     function updateMetaColor(isDark) { metaThemeColor.setAttribute("content", isDark ? "#0F172A" : "#F8FAFC"); }
-    const getUI = (j) => { if(j === 'Pemasukan') return { i:'💰', bg:'rgba(16, 185, 129, 0.2)', c:'#10B981', s:'+' }; if(j === 'Pengeluaran') return { i:'💸', bg:'rgba(239, 68, 68, 0.2)', c:'#EF4444', s:'-' }; return { i:'🔒', bg:'rgba(139, 92, 246, 0.2)', c:'#8B5CF6', s:'-' }; };
+    
+    const getUI = (j) => { 
+        if(j === 'Pemasukan') return { i:'💰', bg:'rgba(16, 185, 129, 0.2)', c:'#10B981', s:'+' }; 
+        if(j === 'Pengeluaran') return { i:'💸', bg:'rgba(239, 68, 68, 0.2)', c:'#EF4444', s:'-' }; 
+        if(j === 'Penarikan Tabungan') return { i:'🏧', bg:'rgba(59, 130, 246, 0.2)', c:'#3B82F6', s:'+' };
+        return { i:'🔒', bg:'rgba(139, 92, 246, 0.2)', c:'#8B5CF6', s:'-' }; 
+    };
 
     function toggleSensor() {
         isSaldoHidden = !isSaldoHidden; 
@@ -1194,7 +1148,7 @@
         closeFilterModal(); applyFilter();
     }
 
-    // ---------------- UPDATE: RENDER LIST DENGAN DATE GROUPING ----------------
+    // ---------------- RENDER LIST DENGAN DATE GROUPING ----------------
     function setQuickFilter(type) {
         activeQuickFilter = type;
         document.querySelectorAll('.qf-chip').forEach(el => {
@@ -1214,13 +1168,16 @@
         const listEl = document.getElementById('list-data');
         if (resetBatas) batasanRender = 15; listEl.innerHTML = '';
 
-        // Terapkan Quick Filter (Pemasukan / Pengeluaran / Tabungan / Semua)
         let filteredData = dataToRender;
         if (activeQuickFilter !== 'Semua') {
-            filteredData = filteredData.filter(x => x.jenis === activeQuickFilter);
+            // Khusus tabungan kita satukan yang masuk dan keluar agar terlihat di tab tabungan
+            if(activeQuickFilter === 'Tabungan') {
+                filteredData = filteredData.filter(x => x.jenis === 'Tabungan' || x.jenis === 'Penarikan Tabungan');
+            } else {
+                filteredData = filteredData.filter(x => x.jenis === activeQuickFilter);
+            }
         }
 
-        // Terapkan Search Text
         const searchQuery = document.getElementById('search-history').value.toLowerCase();
         if (searchQuery) {
             filteredData = filteredData.filter(x => x.kategori.toLowerCase().includes(searchQuery));
@@ -1297,7 +1254,63 @@
 
     window.muatLebihBanyak = function() { batasanRender += 15; renderHistoryList(currentViewData, false); };
     
-    // ---------------- LOGIKA UTAMA ----------------
+    // ---------------- LOGIKA TARIK TABUNGAN ----------------
+    function bukaModalTarik() {
+        document.getElementById('input-tarik-tabungan').value = '';
+        document.getElementById('modal-tarik-tabungan').style.display = 'flex';
+        setTimeout(() => { document.getElementById('modal-tarik-tabungan').style.opacity = '1'; }, 10);
+        setTimeout(() => { document.getElementById('input-tarik-tabungan').focus(); }, 300);
+    }
+    
+    function tutupModalTarik() {
+        document.getElementById('modal-tarik-tabungan').style.opacity = '0';
+        setTimeout(() => { document.getElementById('modal-tarik-tabungan').style.display = 'none'; }, 300);
+    }
+    
+    async function prosesTarikTabungan() {
+        let inputElemen = document.getElementById('input-tarik-tabungan');
+        let nominalTarik = parseInt(inputElemen.value.replace(/\./g, ''));
+
+        if (isNaN(nominalTarik) || nominalTarik <= 0) {
+            return showToast("⚠️ Masukkan nominal yang valid!", "error");
+        }
+
+        if (nominalTarik > totalSaldoTabunganGlobal) {
+            return showToast("⚠️ Saldo tabungan tidak mencukupi!", "error");
+        }
+
+        let btn = document.getElementById('btn-proses-tarik');
+        let originalText = btn.innerText;
+        btn.innerText = 'Memproses... ⏳';
+        btn.disabled = true;
+
+        const t = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
+        
+        try {
+            // Mencatat riwayat khusus agar tabungan berkurang dan dompet bertambah
+            const { error } = await supa.from('transaksi').insert([{ 
+                jenis: 'Penarikan Tabungan', 
+                kategori: 'Pencairan Tabungan ke Dompet', 
+                nominal: nominalTarik, 
+                tanggal: t, 
+                nama_user: currentUser 
+            }]);
+            
+            if (error) throw error;
+            
+            playSound('Pemasukan');
+            showToast("✅ Berhasil menarik Rp " + new Intl.NumberFormat('id-ID').format(nominalTarik), "success");
+            tutupModalTarik();
+            await loadData();
+        } catch (err) {
+            showToast("Gagal menarik tabungan.", "error");
+        }
+        
+        btn.innerText = originalText;
+        btn.disabled = false;
+    }
+
+    // ---------------- LOGIKA UTAMA (APPLY FILTER) ----------------
     function applyFilter() {
         let labelText = '';
         if (activeFilterMode === 'month') {
@@ -1309,18 +1322,37 @@
         }
         
         document.getElementById('btn-main-filter').innerText = labelText + ' ▾'; document.getElementById('label-bulan-dompet').innerText = labelText; document.getElementById('search-history').value = '';
-        let tMasuk=0, tKeluar=0, tTabungBulanIni=0, tTabungAllTime=0; 
-        allData.forEach(x => { if(x.jenis === 'Tabungan') tTabungAllTime += Number(x.nominal); });
-        currentViewData.forEach(x => { if(x.jenis === 'Pemasukan') tMasuk += Number(x.nominal); else if(x.jenis === 'Pengeluaran') tKeluar += Number(x.nominal); else if(x.jenis === 'Tabungan') tTabungBulanIni += Number(x.nominal); });
+        
+        let tMasuk=0, tKeluar=0, tTabungBulanIni=0, tTabungAllTime=0, tTarikTabungAllTime=0, tTarikTabungBulanIni=0; 
+        
+        allData.forEach(x => { 
+            if(x.jenis === 'Tabungan') tTabungAllTime += Number(x.nominal); 
+            if(x.jenis === 'Penarikan Tabungan') tTarikTabungAllTime += Number(x.nominal); 
+        });
+        
+        currentViewData.forEach(x => { 
+            if(x.jenis === 'Pemasukan') tMasuk += Number(x.nominal); 
+            else if(x.jenis === 'Pengeluaran') tKeluar += Number(x.nominal); 
+            else if(x.jenis === 'Tabungan') tTabungBulanIni += Number(x.nominal); 
+            else if(x.jenis === 'Penarikan Tabungan') tTarikTabungBulanIni += Number(x.nominal); 
+        });
 
-        renderHistoryList(currentViewData); updateProgress(tTabungAllTime, tKeluar); updateInsight(); renderChart(tMasuk, tKeluar, tTabungBulanIni);
+        // Set variabel global untuk validasi limit tarik
+        totalSaldoTabunganGlobal = tTabungAllTime - tTarikTabungAllTime;
+        let saldoTabunganBulanIni = tTabungBulanIni - tTarikTabungBulanIni;
 
-        let totalDompetAktif = (tMasuk - tKeluar - tTabungBulanIni);
+        renderHistoryList(currentViewData); 
+        updateProgress(totalSaldoTabunganGlobal, tKeluar); 
+        updateInsight(); 
+        renderChart(tMasuk, tKeluar, Math.max(0, saldoTabunganBulanIni));
+
+        // Saldo Dompet (Pemasukan - Pengeluaran - Uang yg ditabung + Uang yg dicairkan)
+        let totalDompetAktif = (tMasuk - tKeluar - saldoTabunganBulanIni);
         
         animateNumber('t-masuk', tMasuk);
         animateNumber('t-keluar', tKeluar);
         animateNumber('t-dompet-aktif', totalDompetAktif);
-        animateNumber('t-tabung', tTabungAllTime);
+        animateNumber('t-tabung', totalSaldoTabunganGlobal);
     }
 
     // Modal & Download Excel
@@ -1346,7 +1378,18 @@
         const btn = document.getElementById('btn-unduh-excel'); btn.innerText = "Memproses... ⏳"; btn.disabled = true;
         const { data, error } = await query; btn.innerText = "Unduh File (.xlsx) 📥"; btn.disabled = false;
         if (error) return showToast('Terjadi kesalahan!', 'error'); if (data.length === 0) return showToast('Data kosong!', 'error');
-        const excelData = data.map((x, i) => ({ "No": i+1, "Tanggal": x.tanggal, "Jenis": x.jenis, "Keterangan": x.kategori, "Pemasukan (Rp)": x.jenis==='Pemasukan'?Number(x.nominal):0, "Pengeluaran (Rp)": x.jenis==='Pengeluaran'?Number(x.nominal):0, "Tabungan (Rp)": x.jenis==='Tabungan'?Number(x.nominal):0 }));
+        
+        // Memperbarui Format Output Excel
+        const excelData = data.map((x, i) => ({ 
+            "No": i+1, 
+            "Tanggal": x.tanggal, 
+            "Jenis": x.jenis, 
+            "Keterangan": x.kategori, 
+            "Pemasukan (Rp)": (x.jenis === 'Pemasukan' || x.jenis === 'Penarikan Tabungan') ? Number(x.nominal) : 0, 
+            "Pengeluaran (Rp)": x.jenis === 'Pengeluaran' ? Number(x.nominal) : 0, 
+            "Tabungan (Rp)": x.jenis === 'Tabungan' ? Number(x.nominal) : (x.jenis === 'Penarikan Tabungan' ? -Number(x.nominal) : 0) 
+        }));
+        
         const ws = XLSX.utils.json_to_sheet(excelData); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Rekap"); XLSX.writeFile(wb, fileName);
         closeExcelModal(); showToast("Excel diunduh!", "success");
     }
@@ -1450,6 +1493,7 @@
             const activeModals = [
                 { id: 'hapus-modal', execute: prosesHapus },
                 { id: 'logout-modal', execute: prosesLogout },
+                { id: 'modal-tarik-tabungan', execute: prosesTarikTabungan },
                 { id: 'modal-pengumuman', execute: tutupPengumuman },
                 { id: 'ganti-username-modal', execute: prosesGantiUsername },
                 { id: 'target-modal', execute: saveTarget },
