@@ -32,7 +32,7 @@
                         slideUp: { '0%': { opacity: '0', transform: 'translateY(15px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
                         fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } }
                     },
-                    animation: { 'slide-up': 'slideUp 0.4s ease-out forwards', 'fade-in': 'fadeIn 0.3s ease-out forwards' }
+                    animation: { 'slide-up': 'slideUp 0.4s ease-out forwards', 'fade-in': 'fadeIn 0.2s ease-out forwards' }
                 }
             }
         }
@@ -42,6 +42,58 @@
 
     <!-- Kontainer Pop-up Toast -->
     <div id="toast-container" class="fixed top-5 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none w-max max-w-[90%]"></div>
+
+    <!-- MODAL CUSTOM TARGET DANA DENGAN PRESET OPSI & PREVIEW -->
+    <div id="modal-target-dana" class="fixed inset-0 bg-black/40 z-[100] hidden items-center justify-center animate-fade-in px-4 backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-6 transform transition-all animate-slide-up max-h-[90vh] overflow-y-auto hide-scrollbar">
+            <h3 class="font-serif text-lg text-textDark mb-1">Atur Target Dana</h3>
+            <p class="text-[11px] md:text-xs text-textMuted mb-4">Pilih paket anggaran otomatis, atau ketik nominal manual.</p>
+            
+            <!-- TOMBOL PRESET ANGGARAN -->
+            <div class="mb-4">
+                <label class="text-[10px] text-textMuted block mb-2 font-medium">Opsi Paket Cepat:</label>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="setPresetDana(10000000)" class="px-2 py-1 md:px-3 md:py-1.5 rounded-lg bg-[#FCFAF8] border border-cardBorder text-[10px] md:text-xs text-textMuted hover:border-accentRed hover:text-accentRed hover:bg-red-50 transition-all focus:outline-none focus:ring-1 focus:ring-accentRed active:scale-95">10 Juta</button>
+                    <button onclick="setPresetDana(20000000)" class="px-2 py-1 md:px-3 md:py-1.5 rounded-lg bg-[#FCFAF8] border border-cardBorder text-[10px] md:text-xs text-textMuted hover:border-accentRed hover:text-accentRed hover:bg-red-50 transition-all focus:outline-none focus:ring-1 focus:ring-accentRed active:scale-95">20 Juta</button>
+                    <button onclick="setPresetDana(30000000)" class="px-2 py-1 md:px-3 md:py-1.5 rounded-lg bg-[#FCFAF8] border border-cardBorder text-[10px] md:text-xs text-textMuted hover:border-accentRed hover:text-accentRed hover:bg-red-50 transition-all focus:outline-none focus:ring-1 focus:ring-accentRed active:scale-95">30 Juta</button>
+                    <button onclick="setPresetDana(40000000)" class="px-2 py-1 md:px-3 md:py-1.5 rounded-lg bg-[#FCFAF8] border border-cardBorder text-[10px] md:text-xs text-textMuted hover:border-accentRed hover:text-accentRed hover:bg-red-50 transition-all focus:outline-none focus:ring-1 focus:ring-accentRed active:scale-95">40 Juta</button>
+                    <button onclick="setPresetDana(50000000)" class="px-2 py-1 md:px-3 md:py-1.5 rounded-lg bg-[#FCFAF8] border border-cardBorder text-[10px] md:text-xs text-textMuted hover:border-accentRed hover:text-accentRed hover:bg-red-50 transition-all focus:outline-none focus:ring-1 focus:ring-accentRed active:scale-95">50 Juta</button>
+                </div>
+            </div>
+
+            <div class="relative mb-3">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-textMuted text-sm font-medium">Rp</span>
+                <input type="number" id="input-modal-dana" class="w-full text-sm border-gray-300 rounded-lg py-2.5 pl-9 pr-3 border outline-none focus:ring-2 focus:ring-accentRed/30 focus:border-accentRed transition-all" placeholder="Atau ketik manual..." oninput="hidePreview()">
+            </div>
+
+            <!-- PREVIEW RINCIAN OTOMATIS (MUNCUL KALAU KLIK OPSI) -->
+            <div id="preview-preset" class="hidden mb-5 bg-[#FCFAF8] p-3 rounded-lg border border-accentPink text-[10px] md:text-xs text-textMuted shadow-sm">
+                <!-- Data di-inject via JavaScript -->
+            </div>
+            
+            <div class="flex justify-end gap-2">
+                <button onclick="tutupModalDana()" class="px-4 py-2 rounded-lg text-xs font-medium text-textMuted hover:bg-gray-100 active:scale-95 transition-all">Batal</button>
+                <button onclick="simpanTargetDana()" class="px-4 py-2 rounded-lg text-xs font-medium bg-accentRed text-white hover:bg-[#7d4e4a] active:scale-95 transition-all shadow-sm">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL KONFIRMASI ANGGARAN OTOMATIS (PENGGANTI ALERT/PROMPT BAWAAN) -->
+    <div id="modal-konfirmasi" class="fixed inset-0 bg-black/40 z-[110] hidden items-center justify-center animate-fade-in px-4 backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-6 transform transition-all animate-slide-up">
+            <div class="w-12 h-12 rounded-full bg-red-50 text-accentRed flex items-center justify-center mb-4 mx-auto shadow-sm border border-red-100">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            </div>
+            <h3 class="font-serif text-lg text-center text-textDark mb-2">Gunakan Rincian Otomatis?</h3>
+            <p id="teks-konfirmasi" class="text-[11px] md:text-xs text-center text-textMuted mb-6 leading-relaxed">
+                <!-- Teks diinject lewat JS -->
+            </p>
+            <div class="flex flex-col justify-center gap-2">
+                <button onclick="lanjutKonfirmasi()" class="px-4 py-2.5 rounded-lg text-xs font-medium bg-accentRed text-white hover:bg-[#7d4e4a] active:scale-95 transition-all shadow-sm w-full">Ya, Isi Otomatis & Timpa Data</button>
+                <button onclick="batalKonfirmasi()" class="px-4 py-2.5 rounded-lg text-xs font-medium text-textMuted bg-gray-50 border border-gray-200 hover:bg-gray-100 active:scale-95 transition-all w-full">Batal, Cuma Ubah Totalnya Aja</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Sidebar Desktop -->
     <aside class="w-64 bg-bgSide border-r border-cardBorder h-full flex-col p-6 hidden md:flex shrink-0 overflow-y-auto hide-scrollbar">
@@ -142,11 +194,19 @@
                     <div id="stat-sisa-hari" class="text-xl md:text-2xl font-serif mb-1">0 <span class="text-sm">hari</span></div>
                     <div id="stat-tgl-target" class="text-[10px] md:text-xs text-textMuted">-</div>
                 </div>
-                <div class="bg-white p-4 md:p-5 rounded-xl border border-cardBorder shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-300">
-                    <div class="text-[10px] md:text-xs text-textMuted mb-2">Target dana</div>
-                    <div class="text-xl md:text-2xl font-serif mb-1">Rp50 <span class="text-sm">jt</span></div>
+                
+                <!-- KOTAK TARGET DANA DENGAN CUSTOM MODAL TRIGGER -->
+                <div class="bg-white p-4 md:p-5 rounded-xl border border-cardBorder shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-300 group relative">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="text-[10px] md:text-xs text-textMuted">Target dana</div>
+                        <button onclick="bukaModalDana()" class="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-accentRed transition-all bg-gray-50 p-1 rounded" title="Ubah Target Dana">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                        </button>
+                    </div>
+                    <div id="stat-target-dana" class="text-xl md:text-2xl font-serif mb-1">Rp50 <span class="text-sm">jt</span></div>
                     <div class="text-[10px] md:text-xs text-textMuted">Batas rencana</div>
                 </div>
+
                 <div class="bg-white p-4 md:p-5 rounded-xl border border-cardBorder shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-300">
                     <div class="text-[10px] md:text-xs text-textMuted mb-2">Sudah terkumpul</div>
                     <div id="total-terkumpul" class="text-xl md:text-2xl font-serif mb-1">Rp0 <span class="text-sm">jt</span></div>
@@ -316,12 +376,15 @@
         const { createClient } = supabase;
         const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
-        const TARGET_DANA = 50000000;
         const trashIcon = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>`;
         const quotes = ["Capeknya bareng-bareng, bahagianya juga bareng-bareng.", "Mempersiapkan hari bahagia tanpa tekanan.", "Satu langkah kecil menuju hari besar.", "Kerja sama berdua pasti bisa!", "Jangan lupa senyum hari ini! ✨", "Saling bantu, saling mengerti. 🤍"];
 
         let dataTabungan=[], dataAnggaran=[], dataChecklist=[], dataTamu=[], dataVendor=[], dataRundown=[], dataReferensi=[], dataPesan=[];
-        let targetHari=null; let showAllChecklist=false;
+        let targetHari=null; 
+        let targetDana=50000000;
+        let showAllChecklist=false;
+        let isPresetSelected = false; 
+        let pendingTargetDana = 0; // Tambahan variabel buat nahan nominal pas dikonfirmasi
 
         // FUNGSI PEMANIS
         function updateSapaan() {
@@ -377,21 +440,137 @@
                     supabaseClient.from('checklist').select('*'), supabaseClient.from('pengaturan').select('*').eq('id', 1).single(),
                     supabaseClient.from('tamu').select('*'), supabaseClient.from('vendor').select('*'),
                     supabaseClient.from('rundown').select('*').order('waktu', { ascending: true }), supabaseClient.from('referensi').select('*'),
-                    supabaseClient.from('pesan_cinta').select('*') // Handle error aman kalo blm ada
+                    supabaseClient.from('pesan_cinta').select('*')
                 ]);
                 if (resTb.data) dataTabungan = resTb.data; if (resAg.data) dataAnggaran = resAg.data;
                 if (resCl.data) dataChecklist = resCl.data; if (resTm.data) dataTamu = resTm.data;
                 if (resVn.data) dataVendor = resVn.data; if (resRd.data) dataRundown = resRd.data;
                 if (resRf.data) dataReferensi = resRf.data; if (resPs.data) dataPesan = resPs.data;
-                if (resPg.data && resPg.data.target_hari) { targetHari = resPg.data.target_hari; document.getElementById('input-target-hari').value = targetHari; }
+                
+                if (resPg.data) { 
+                    if(resPg.data.target_hari) {
+                        targetHari = resPg.data.target_hari; document.getElementById('input-target-hari').value = targetHari; 
+                    }
+                    if(resPg.data.target_dana) {
+                        targetDana = resPg.data.target_dana;
+                    }
+                }
                 renderSemuaUI();
             } catch (err) { console.error("Error Fetch:", err); } finally { hideLoading(); }
         }
 
-        function renderSemuaUI() { renderSisaWaktu(); renderTabungan(); renderAnggaran(); renderChecklist(); renderTamu(); renderVendor(); renderRundown(); renderReferensi(); renderPesan(); }
+        function renderSemuaUI() { renderStatistik(); renderTabungan(); renderAnggaran(); renderChecklist(); renderTamu(); renderVendor(); renderRundown(); renderReferensi(); renderPesan(); }
 
-        async function updateTargetHari(newDate) { if (!newDate) return; showLoading(); await supabaseClient.from('pengaturan').upsert({ id: 1, target_hari: newDate }); targetHari = newDate; renderSisaWaktu(); hideLoading(); showToast('Target hari diperbarui! 🗓️'); }
-        function renderSisaWaktu() { if (!targetHari) return; document.getElementById('stat-tgl-target').innerText = formatDate(targetHari); const diffDays = Math.ceil((new Date(targetHari).setHours(0,0,0,0) - new Date().setHours(0,0,0,0)) / (1000 * 60 * 60 * 24)); document.getElementById('stat-sisa-hari').innerHTML = `${diffDays >= 0 ? diffDays : 0} <span class="text-sm">hari</span>`; }
+        // ================= TARGET HARI & MODAL TARGET DANA =================
+        async function updateTargetHari(newDate) { if (!newDate) return; showLoading(); await supabaseClient.from('pengaturan').upsert({ id: 1, target_hari: newDate }); targetHari = newDate; renderStatistik(); hideLoading(); showToast('Target hari diperbarui! 🗓️'); }
+        
+        function bukaModalDana() {
+            document.getElementById('input-modal-dana').value = targetDana;
+            isPresetSelected = false;
+            document.getElementById('preview-preset').classList.add('hidden');
+            document.getElementById('modal-target-dana').classList.remove('hidden');
+            document.getElementById('modal-target-dana').classList.add('flex');
+        }
+
+        function tutupModalDana() {
+            document.getElementById('modal-target-dana').classList.add('hidden');
+            document.getElementById('modal-target-dana').classList.remove('flex');
+        }
+
+        function hidePreview() {
+            isPresetSelected = false;
+            document.getElementById('preview-preset').classList.add('hidden');
+        }
+
+        function setPresetDana(amount) {
+            document.getElementById('input-modal-dana').value = amount;
+            isPresetSelected = true; 
+            
+            const preview = document.getElementById('preview-preset');
+            preview.classList.remove('hidden');
+            
+            const fRp = (n) => 'Rp ' + new Intl.NumberFormat('id-ID').format(n);
+            
+            preview.innerHTML = `
+                <div class="font-medium text-accentRed mb-2 text-xs flex items-center gap-1">✨ Preview Rincian (Otomatis):</div>
+                <div class="flex justify-between border-b border-gray-100 py-1"><span>Katering & Venue (50%)</span><span class="font-medium text-textDark">${fRp(amount * 0.50)}</span></div>
+                <div class="flex justify-between border-b border-gray-100 py-1"><span>Busana & MUA (15%)</span><span class="font-medium text-textDark">${fRp(amount * 0.15)}</span></div>
+                <div class="flex justify-between border-b border-gray-100 py-1"><span>Dekorasi (10%)</span><span class="font-medium text-textDark">${fRp(amount * 0.10)}</span></div>
+                <div class="flex justify-between border-b border-gray-100 py-1"><span>Dokumentasi (10%)</span><span class="font-medium text-textDark">${fRp(amount * 0.10)}</span></div>
+                <div class="flex justify-between border-b border-gray-100 py-1"><span>Hiburan & MC (5%)</span><span class="font-medium text-textDark">${fRp(amount * 0.05)}</span></div>
+                <div class="flex justify-between pt-1"><span>Lainnya / Cadangan (10%)</span><span class="font-medium text-textDark">${fRp(amount * 0.10)}</span></div>
+            `;
+        }
+
+        async function simpanTargetDana() {
+            const input = document.getElementById('input-modal-dana').value;
+            if (input && !isNaN(input) && input > 0) {
+                pendingTargetDana = parseInt(input);
+                
+                // Konfirmasi kalau user mau pakai Paket Preset via Custom Modal
+                if (isPresetSelected) {
+                    document.getElementById('teks-konfirmasi').innerHTML = `Kamu memilih paket anggaran <b>Rp${pendingTargetDana/1000000} Juta</b>.<br><br>Apakah kamu mau sekalian isi rincian persentasenya secara otomatis? <br><span class="text-accentRed font-medium italic">(Rincian anggaran yang lama akan tertimpa)</span>`;
+                    
+                    document.getElementById('modal-konfirmasi').classList.remove('hidden');
+                    document.getElementById('modal-konfirmasi').classList.add('flex');
+                    tutupModalDana();
+                } else {
+                    eksekusiSimpanDana(false);
+                }
+            } else {
+                showToast('Masukkan angka yang benar ya! 😅');
+            }
+        }
+
+        function batalKonfirmasi() {
+            document.getElementById('modal-konfirmasi').classList.add('hidden');
+            document.getElementById('modal-konfirmasi').classList.remove('flex');
+            eksekusiSimpanDana(false); // Cuma ubah target aja
+        }
+
+        function lanjutKonfirmasi() {
+            document.getElementById('modal-konfirmasi').classList.add('hidden');
+            document.getElementById('modal-konfirmasi').classList.remove('flex');
+            eksekusiSimpanDana(true); // Timpa data anggaran
+        }
+
+        async function eksekusiSimpanDana(pakaiOtomatis) {
+            tutupModalDana();
+            showLoading();
+            
+            await supabaseClient.from('pengaturan').upsert({ id: 1, target_dana: pendingTargetDana });
+            targetDana = pendingTargetDana;
+
+            if (pakaiOtomatis && isPresetSelected) {
+                await supabaseClient.from('anggaran').delete().gt('id', 0); // Bersihin yang lama
+                
+                const rincian = [
+                    { nama: 'Katering & Venue (50%)', nominal: pendingTargetDana * 0.50, warna: '#523A36' },
+                    { nama: 'Busana & MUA (15%)', nominal: pendingTargetDana * 0.15, warna: '#A55F55' },
+                    { nama: 'Dekorasi (10%)', nominal: pendingTargetDana * 0.10, warna: '#64846F' },
+                    { nama: 'Dokumentasi (10%)', nominal: pendingTargetDana * 0.10, warna: '#D19B45' },
+                    { nama: 'Hiburan & MC (5%)', nominal: pendingTargetDana * 0.05, warna: '#8C827B' },
+                    { nama: 'Cadangan/Lainnya (10%)', nominal: pendingTargetDana * 0.10, warna: '#CD9A93' }
+                ];
+                await supabaseClient.from('anggaran').insert(rincian);
+                showToast('Rincian anggaran otomatis disiapkan! 📊', '🪄');
+            } else {
+                showToast('Target dana diperbarui! 💰');
+            }
+            
+            isPresetSelected = false; // Reset balik state
+            await fetchSemuaData(); 
+            hideLoading();
+        }
+
+        function renderStatistik() { 
+            if (targetHari) {
+                document.getElementById('stat-tgl-target').innerText = formatDate(targetHari); 
+                const diffDays = Math.ceil((new Date(targetHari).setHours(0,0,0,0) - new Date().setHours(0,0,0,0)) / (1000 * 60 * 60 * 24)); 
+                document.getElementById('stat-sisa-hari').innerHTML = `${diffDays >= 0 ? diffDays : 0} <span class="text-sm">hari</span>`; 
+            }
+            document.getElementById('stat-target-dana').innerHTML = `Rp${(targetDana/1000000).toFixed(1).replace('.0','').replace('.',',')} <span class="text-sm">jt</span>`;
+        }
 
         // ================= PESAN CINTA =================
         document.getElementById('form-pesan').addEventListener('submit', async (e) => { e.preventDefault(); const p=document.getElementById('pesan-pengirim').value; const i=document.getElementById('pesan-isi').value; showLoading(); await supabaseClient.from('pesan_cinta').insert([{ pengirim:p, pesan:i }]); document.getElementById('pesan-isi').value = ''; showToast('Pesan terkirim! 💌'); await fetchSemuaData(); });
@@ -405,7 +584,7 @@
             });
         }
 
-        // ================= FITUR LAMA DENGAN TOAST & EMPTY STATE =================
+        // ================= FITUR LAINNYA =================
         // TAMU
         document.getElementById('form-tamu').addEventListener('submit', async (e) => { e.preventDefault(); showLoading(); await supabaseClient.from('tamu').insert([{ nama: document.getElementById('tamu-nama').value, pihak: document.getElementById('tamu-pihak').value, kategori: document.getElementById('tamu-kategori').value, pax: parseInt(document.getElementById('tamu-pax').value), status: 'Menunggu' }]); document.getElementById('tamu-nama').value = ''; document.getElementById('tamu-pax').value = '1'; showToast('Tamu berhasil ditambahkan! 👥'); await fetchSemuaData(); });
         async function hapusTamu(id) { showLoading(); await supabaseClient.from('tamu').delete().eq('id', id); showToast('Tamu dihapus. 🗑️'); await fetchSemuaData(); }
@@ -446,7 +625,7 @@
         function renderTabungan() {
             let list = document.getElementById('list-tabungan'), total = 0; list.innerHTML = ''; if(dataTabungan.length === 0) list.innerHTML = `<p class="text-xs text-textMuted text-center py-4 border border-dashed rounded-lg">Celengan kosong nih. Yuk mulai sisihin sedikit demi sedikit! 🐷💸</p>`;
             [...dataTabungan].sort((a,b) => new Date(b.tgl)-new Date(a.tgl)).forEach(item => { total += item.jumlah; list.innerHTML += `<div class="flex justify-between items-center bg-[#FDFBF9] p-3 rounded-lg border border-cardBorder hover:-translate-x-1 hover:border-red-100 transition-all duration-300"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-accentPink text-accentRed flex items-center justify-center font-serif text-xs">${item.penabung.charAt(0)}</div><div><div class="font-medium text-sm">${item.penabung}</div><div class="text-[10px] text-textMuted">${formatDate(item.tgl)}</div></div></div><div class="flex items-center gap-3"><div class="font-semibold text-sm">Rp ${formatRupiah(item.jumlah)}</div><button onclick="hapusTabungan(${item.id})" class="text-gray-300 hover:text-red-500 transition-colors">${trashIcon}</button></div></div>`; });
-            document.getElementById('total-tabungan-bawah').innerText = `Rp ${formatRupiah(total)}`; document.getElementById('total-terkumpul').innerHTML = `Rp${(total/1000000).toFixed(1).replace('.0','')} <span class="text-sm">jt</span>`; document.getElementById('persen-terkumpul').innerText = `${((total/TARGET_DANA)*100).toFixed(1)}% dari total`;
+            document.getElementById('total-tabungan-bawah').innerText = `Rp ${formatRupiah(total)}`; document.getElementById('total-terkumpul').innerHTML = `Rp${(total/1000000).toFixed(1).replace('.0','')} <span class="text-sm">jt</span>`; document.getElementById('persen-terkumpul').innerText = `${((total/targetDana)*100).toFixed(1)}% dari total`;
         }
 
         // ANGGARAN
@@ -455,7 +634,7 @@
         function renderAnggaran() {
             let list = document.getElementById('list-anggaran'), total = 0; list.innerHTML = ''; if(dataAnggaran.length === 0) list.innerHTML = `<p class="text-[10px] md:text-xs text-textMuted py-4 text-center border border-dashed rounded-lg mt-2">Belum ada rincian. Mau atur budget Katering dulu? 📝</p>`;
             dataAnggaran.forEach((item, i) => { total += item.nominal; list.innerHTML += `<div class="flex justify-between items-center text-sm ${i===0?'pb-2':'border-t border-gray-100 py-2'} hover:bg-gray-50 px-2 -mx-2 rounded transition-colors"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full transition-transform hover:scale-125" style="background-color: ${item.warna}"></span>${item.nama}</div><div class="flex items-center gap-2"><div class="text-xs text-textMuted">Rp${(item.nominal/1000000).toString().replace('.',',')} jt</div><button onclick="hapusAnggaran(${item.id})" class="text-gray-300 hover:text-red-500 transition-colors">${trashIcon}</button></div></div>`; });
-            document.getElementById('teks-total-anggaran').innerText = `Rp ${(total/1000000).toString().replace('.',',')} jt`; document.getElementById('teks-sisa-anggaran').innerText = `sisa Rp${((TARGET_DANA-total)/1000000).toString().replace('.',',')} jt`; setTimeout(() => { document.getElementById('bar-anggaran').style.width = `${Math.min((total/TARGET_DANA)*100, 100)}%`; }, 100);
+            document.getElementById('teks-total-anggaran').innerText = `Rp ${(total/1000000).toString().replace('.',',')} jt`; document.getElementById('teks-sisa-anggaran').innerText = `sisa Rp${((targetDana-total)/1000000).toFixed(1).replace('.0','').replace('.',',')} jt`; setTimeout(() => { document.getElementById('bar-anggaran').style.width = `${Math.min((total/targetDana)*100, 100)}%`; }, 100);
         }
 
         // CHECKLIST
@@ -470,7 +649,7 @@
         }
 
         // INIT
-        updateSapaan(); // Set Sapaan Pagi/Siang/Sore
+        updateSapaan(); 
         document.getElementById('tgl-nabung').valueAsDate = new Date();
         fetchSemuaData();
     </script>
