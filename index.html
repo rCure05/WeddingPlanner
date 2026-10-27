@@ -6,518 +6,473 @@
     <title>Berdua - Wedding Planner</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-    
-    <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
+    <style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Animasi Toast Pop-up */
+        @keyframes toastSlide {
+            0% { transform: translate(-50%, -20px) scale(0.9); opacity: 0; }
+            10% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+            90% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -20px) scale(0.9); opacity: 0; }
+        }
+        .animate-toast { animation: toastSlide 3s ease-in-out forwards; }
+    </style>
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
+                    fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Playfair Display', 'serif'] },
+                    colors: { bgMain: '#FDFBF9', bgSide: '#FCFAF8', textDark: '#3A3331', textMuted: '#8C827B', accentPink: '#F2E8E3', accentRed: '#965E59', cardBorder: '#F0EBE6' },
+                    keyframes: {
+                        slideUp: { '0%': { opacity: '0', transform: 'translateY(15px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } }
                     },
-                    colors: {
-                        bgMain: '#FDFBF9',
-                        bgSide: '#FCFAF8',
-                        textDark: '#3A3331',
-                        textMuted: '#8C827B',
-                        accentPink: '#F2E8E3',
-                        accentRed: '#965E59',
-                        cardBorder: '#F0EBE6'
-                    }
+                    animation: { 'slide-up': 'slideUp 0.4s ease-out forwards', 'fade-in': 'fadeIn 0.3s ease-out forwards' }
                 }
             }
         }
     </script>
 </head>
-<body class="bg-bgMain text-textDark font-sans flex h-screen overflow-hidden">
+<body class="bg-bgMain text-textDark font-sans flex h-screen overflow-hidden relative animate-fade-in">
 
-    <!-- Sidebar -->
-    <aside class="w-64 bg-bgSide border-r border-cardBorder h-full flex flex-col p-6 hidden md:flex shrink-0">
-        <div class="flex items-center gap-3 mb-12">
-            <div class="w-8 h-8 rounded-full bg-[#523A36] text-white flex items-center justify-center font-serif text-lg italic">b.</div>
+    <!-- Kontainer Pop-up Toast -->
+    <div id="toast-container" class="fixed top-5 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none w-max max-w-[90%]"></div>
+
+    <!-- Sidebar Desktop -->
+    <aside class="w-64 bg-bgSide border-r border-cardBorder h-full flex-col p-6 hidden md:flex shrink-0 overflow-y-auto hide-scrollbar">
+        <div class="flex items-center gap-3 mb-12 animate-slide-up" style="animation-delay: 0.1s;">
+            <div class="w-8 h-8 rounded-full bg-[#523A36] text-white flex items-center justify-center font-serif text-lg italic transition-transform hover:rotate-12 duration-300">b.</div>
             <span class="text-xl font-serif text-textDark tracking-wide">berdua</span>
         </div>
-        <div class="text-xs font-semibold text-textMuted tracking-widest uppercase mb-4">Ruang Kita</div>
-        <nav class="flex flex-col gap-1">
-            <a href="#" onclick="gantiMenu('ringkasan')" id="menu-ringkasan" class="menu-btn flex items-center gap-3 px-4 py-2.5 bg-accentPink rounded-lg text-textDark font-medium text-sm transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                Ringkasan
+        
+        <div class="text-xs font-semibold text-textMuted tracking-widest uppercase mb-4 animate-slide-up" style="animation-delay: 0.2s;">Ruang Kita</div>
+        <nav class="flex flex-col gap-1 mb-8 animate-slide-up" style="animation-delay: 0.3s;">
+            <a href="#" onclick="gantiMenu('ringkasan')" id="menu-desktop-ringkasan" class="menu-btn-desktop flex items-center gap-3 px-4 py-2.5 bg-accentPink rounded-lg text-textDark font-medium text-sm transition-all duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg> Ringkasan
             </a>
-            <a href="#" onclick="gantiMenu('anggaran')" id="menu-anggaran" class="menu-btn flex items-center gap-3 px-4 py-2.5 text-textMuted hover:bg-gray-50 rounded-lg text-sm transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                Anggaran
+            <a href="#" onclick="gantiMenu('tamu')" id="menu-desktop-tamu" class="menu-btn-desktop flex items-center gap-3 px-4 py-2.5 text-textMuted hover:bg-gray-50 rounded-lg text-sm transition-all duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg> Tamu Undangan
             </a>
-            <a href="#" onclick="gantiMenu('checklist')" id="menu-checklist" class="menu-btn flex items-center gap-3 px-4 py-2.5 text-textMuted hover:bg-gray-50 rounded-lg text-sm transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                Checklist
+            <a href="#" onclick="gantiMenu('anggaran')" id="menu-desktop-anggaran" class="menu-btn-desktop flex items-center gap-3 px-4 py-2.5 text-textMuted hover:bg-gray-50 rounded-lg text-sm transition-all duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Anggaran
             </a>
-            <a href="#" onclick="gantiMenu('tabungan')" id="menu-tabungan" class="menu-btn flex items-center gap-3 px-4 py-2.5 text-textMuted hover:bg-gray-50 rounded-lg text-sm transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                Tabungan
+            <a href="#" onclick="gantiMenu('tabungan')" id="menu-desktop-tabungan" class="menu-btn-desktop flex items-center gap-3 px-4 py-2.5 text-textMuted hover:bg-gray-50 rounded-lg text-sm transition-all duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg> Tabungan
+            </a>
+            <a href="#" onclick="gantiMenu('checklist')" id="menu-desktop-checklist" class="menu-btn-desktop flex items-center gap-3 px-4 py-2.5 text-textMuted hover:bg-gray-50 rounded-lg text-sm transition-all duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg> Checklist
+            </a>
+        </nav>
+
+        <div class="text-xs font-semibold text-textMuted tracking-widest uppercase mb-4 animate-slide-up" style="animation-delay: 0.4s;">Manajemen Acara</div>
+        <nav class="flex flex-col gap-1 animate-slide-up" style="animation-delay: 0.5s;">
+            <a href="#" onclick="gantiMenu('vendor')" id="menu-desktop-vendor" class="menu-btn-desktop flex items-center gap-3 px-4 py-2.5 text-textMuted hover:bg-gray-50 rounded-lg text-sm transition-all duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg> Vendor
+            </a>
+            <a href="#" onclick="gantiMenu('rundown')" id="menu-desktop-rundown" class="menu-btn-desktop flex items-center gap-3 px-4 py-2.5 text-textMuted hover:bg-gray-50 rounded-lg text-sm transition-all duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Rundown
+            </a>
+            <a href="#" onclick="gantiMenu('referensi')" id="menu-desktop-referensi" class="menu-btn-desktop flex items-center gap-3 px-4 py-2.5 text-textMuted hover:bg-gray-50 rounded-lg text-sm transition-all duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg> Referensi
             </a>
         </nav>
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 h-full overflow-y-auto p-6 lg:p-12" id="main-scroll">
-        <!-- Header -->
-        <div class="flex justify-between items-center mb-8">
-            <div class="text-sm text-textMuted">Ruang kita / <span id="teks-breadcrumb" class="text-textDark font-medium">Ringkasan</span></div>
-            <div class="flex items-center gap-4">
-                <!-- Indikator Loading -->
-                <div id="status-loading" class="text-xs text-accentRed font-medium bg-red-50 px-3 py-1.5 rounded-full hidden flex items-center gap-2">
-                    <svg class="animate-spin h-3 w-3 text-accentRed" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                    Menyinkronkan...
+    <main class="flex-1 h-full overflow-y-auto p-5 pb-24 md:p-6 lg:p-12" id="main-scroll">
+        <!-- Header & Sapaan -->
+        <div class="flex justify-between items-start md:items-center mb-6 md:mb-8 animate-fade-in flex-col md:flex-row gap-4">
+            <div class="flex flex-col">
+                <span id="teks-breadcrumb" class="font-medium text-textDark mb-1">Ringkasan</span>
+                <span id="teks-sapaan" class="text-[11px] md:text-xs font-semibold text-accentRed">Halo, Rikki & Puri!</span>
+                <span id="teks-quote" class="text-[9px] md:text-[10px] italic text-textMuted max-w-[250px] md:max-w-md line-clamp-1">Mempersiapkan hari bahagia...</span>
+            </div>
+            <div class="flex items-center gap-4 self-end md:self-auto">
+                <div id="status-loading" class="text-[10px] text-accentRed font-medium bg-red-50 px-2 py-1 rounded-full hidden items-center gap-1 transition-all shadow-sm border border-red-100">
+                    <svg class="animate-spin h-3 w-3 text-accentRed" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Sync
                 </div>
                 <div class="flex -space-x-2">
-                    <div class="w-8 h-8 rounded-full bg-[#825B53] border-2 border-white flex items-center justify-center text-white text-xs">R</div>
-                    <div class="w-8 h-8 rounded-full bg-[#CD9A93] border-2 border-white flex items-center justify-center text-white text-xs">P</div>
+                    <div class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-[#825B53] border-2 border-white flex items-center justify-center text-white text-xs hover:-translate-y-1 transition-transform shadow-sm relative group cursor-help"><span class="absolute -top-6 bg-textDark text-white text-[9px] px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">Rikki</span>R</div>
+                    <div class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-[#CD9A93] border-2 border-white flex items-center justify-center text-white text-xs hover:-translate-y-1 transition-transform shadow-sm relative group cursor-help"><span class="absolute -top-6 bg-textDark text-white text-[9px] px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">Puri</span>P</div>
                 </div>
-                <div class="text-sm hidden sm:block">Rikki & Puri</div>
             </div>
         </div>
 
-        <!-- Bagian Hero & Stats -->
-        <div id="view-hero">
+        <!-- 1. VIEW HERO & STATS -->
+        <div id="view-hero" class="animate-slide-up">
             <div class="flex flex-col md:flex-row justify-between md:items-end gap-4 mb-6">
                 <div>
-                    <p class="text-xs font-bold text-accentRed tracking-widest uppercase mb-3">Rencana Hari Besar Kita</p>
-                    <h1 class="text-4xl font-serif text-textDark mb-2">Pelan-pelan, Menuju Sempurna.</h1>
-                    <p class="text-sm text-textMuted">Satu ruang kecil buat merencanakan semuanya berdua.</p>
+                    <p class="text-[10px] md:text-xs font-bold text-accentRed tracking-widest uppercase mb-2 md:mb-3">Rencana Hari Besar Kita</p>
+                    <h1 class="text-3xl md:text-4xl font-serif text-textDark mb-1 md:mb-2">Pelan-pelan, Menuju Sempurna.</h1>
                 </div>
-                <div class="flex items-center border border-cardBorder bg-white rounded-lg px-3 py-2 text-sm text-textDark w-max">
-                    <span class="mr-2 text-textMuted">Target hari</span> 26/10/2026
-                </div>
-            </div>
-
-            <!-- Banner Gambar -->
-            <div class="relative w-full h-48 rounded-xl overflow-hidden mb-8 bg-gray-900 shadow-sm">
-                <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Floral Banner" class="absolute inset-0 w-full h-full object-cover opacity-50">
-                <div class="relative z-10 p-8 h-full flex flex-col justify-center">
-                    <p class="text-[10px] font-bold text-white/80 tracking-widest uppercase mb-2">Cerita Kita Dimulai Dari Sini</p>
-                    <h2 class="text-3xl font-serif text-white mb-2">Satu hari yang Selalu diimpikan.</h2>
+                <div class="flex items-center border border-cardBorder bg-white rounded-lg px-3 py-2 text-xs md:text-sm text-textDark w-max shadow-sm hover:border-gray-300 hover:shadow-md transition-all">
+                    <label for="input-target-hari" class="mr-2 text-textMuted cursor-pointer">Target hari</label>
+                    <input type="date" id="input-target-hari" onchange="updateTargetHari(this.value)" class="outline-none bg-transparent font-medium cursor-pointer text-textDark">
                 </div>
             </div>
 
-            <!-- 4 Kotak Statistik -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <div class="bg-white p-5 rounded-xl border border-cardBorder shadow-sm">
-                    <div class="text-xs text-textMuted mb-4">Sisa waktu</div>
-                    <div class="text-2xl font-serif mb-1">731 <span class="text-lg">hari</span></div>
-                    <div class="text-xs text-textMuted">26 Oktober 2026</div>
+            <div class="relative w-full h-32 md:h-48 rounded-xl overflow-hidden mb-8 bg-gray-900 shadow-sm transition-transform hover:scale-[1.01] duration-500">
+                <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Banner" class="absolute inset-0 w-full h-full object-cover opacity-50 transition-opacity hover:opacity-60 duration-300">
+                <div class="relative z-10 p-5 md:p-8 h-full flex flex-col justify-center pointer-events-none">
+                    <p class="text-[8px] md:text-[10px] font-bold text-white/80 tracking-widest uppercase mb-1 md:mb-2">Cerita Kita Dimulai Dari Sini</p>
+                    <h2 class="text-xl md:text-3xl font-serif text-white mb-2">Satu hari yang Selalu diimpikan.</h2>
                 </div>
-                <div class="bg-white p-5 rounded-xl border border-cardBorder shadow-sm">
-                    <div class="text-xs text-textMuted mb-4">Target dana</div>
-                    <div class="text-2xl font-serif mb-1">Rp50 <span class="text-lg">jt</span></div>
-                    <div class="text-xs text-textMuted">Batas rencana kita</div>
+            </div>
+
+            <!-- KOTAK PESAN (LOVE NOTES) -->
+            <div class="bg-gradient-to-r from-accentPink/30 to-transparent border border-accentPink p-4 md:p-5 rounded-xl mb-6 shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-accentRed/5 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl"></div>
+                <h3 class="text-xs md:text-sm font-semibold text-accentRed mb-3 flex items-center gap-2">💌 Papan Pesan Semangat</h3>
+                <div id="list-pesan" class="flex flex-col gap-2 mb-3 max-h-32 overflow-y-auto hide-scrollbar"></div>
+                <form id="form-pesan" class="flex gap-2 relative z-10 w-full">
+                    <select id="pesan-pengirim" class="text-[10px] md:text-xs rounded-lg p-1.5 md:p-2 border border-gray-200 outline-none bg-white focus:border-accentRed transition-all"><option value="Rikki">Rikki</option><option value="Puri">Puri</option></select>
+                    <input type="text" id="pesan-isi" required placeholder="Tinggalkan pesan cinta / pengingat..." class="flex-1 text-[10px] md:text-xs rounded-lg p-1.5 md:p-2 border border-gray-200 outline-none focus:border-accentRed transition-all">
+                    <button type="submit" class="bg-accentRed text-white px-3 py-1.5 md:py-2 rounded-lg text-[10px] md:text-xs font-medium hover:bg-[#7d4e4a] active:scale-95 transition-all shadow-sm">Kirim</button>
+                </form>
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-8">
+                <div class="bg-white p-4 md:p-5 rounded-xl border border-cardBorder shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-300">
+                    <div class="text-[10px] md:text-xs text-textMuted mb-2">Sisa waktu</div>
+                    <div id="stat-sisa-hari" class="text-xl md:text-2xl font-serif mb-1">0 <span class="text-sm">hari</span></div>
+                    <div id="stat-tgl-target" class="text-[10px] md:text-xs text-textMuted">-</div>
                 </div>
-                <div class="bg-white p-5 rounded-xl border border-cardBorder shadow-sm">
-                    <div class="text-xs text-textMuted mb-4">Sudah terkumpul</div>
-                    <div id="total-terkumpul" class="text-2xl font-serif mb-1">Rp0 <span class="text-lg">jt</span></div>
-                    <div id="persen-terkumpul" class="text-xs text-textMuted">0% dari total anggaran</div>
+                <div class="bg-white p-4 md:p-5 rounded-xl border border-cardBorder shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-300">
+                    <div class="text-[10px] md:text-xs text-textMuted mb-2">Target dana</div>
+                    <div class="text-xl md:text-2xl font-serif mb-1">Rp50 <span class="text-sm">jt</span></div>
+                    <div class="text-[10px] md:text-xs text-textMuted">Batas rencana</div>
                 </div>
-                <div class="bg-white p-5 rounded-xl border border-cardBorder shadow-sm">
-                    <div class="text-xs text-textMuted mb-4">Checklist</div>
-                    <div id="stat-checklist" class="text-2xl font-serif mb-1">0 / 0</div>
-                    <div class="text-xs text-textMuted">Langkah yang sudah beres</div>
+                <div class="bg-white p-4 md:p-5 rounded-xl border border-cardBorder shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-300">
+                    <div class="text-[10px] md:text-xs text-textMuted mb-2">Sudah terkumpul</div>
+                    <div id="total-terkumpul" class="text-xl md:text-2xl font-serif mb-1">Rp0 <span class="text-sm">jt</span></div>
+                    <div id="persen-terkumpul" class="text-[10px] md:text-xs text-textMuted">0% dari total</div>
+                </div>
+                <div class="bg-white p-4 md:p-5 rounded-xl border border-cardBorder shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-300">
+                    <div class="text-[10px] md:text-xs text-textMuted mb-2">Checklist</div>
+                    <div id="stat-checklist" class="text-xl md:text-2xl font-serif mb-1">0 / 0</div>
+                    <div class="text-[10px] md:text-xs text-textMuted">Langkah beres</div>
                 </div>
             </div>
         </div>
 
-        <!-- Grid Container untuk Anggaran & Checklist -->
-        <div id="grid-cards" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 transition-all duration-300">
-            
-            <!-- Gambaran Anggaran Card -->
-            <div id="card-anggaran" class="bg-white p-6 rounded-xl border border-cardBorder shadow-sm flex flex-col h-fit">
+        <!-- 2. VIEW TAMU UNDANGAN -->
+        <div id="view-tamu" class="hidden animate-slide-up">
+            <div class="bg-white p-5 md:p-6 rounded-xl border border-cardBorder shadow-sm mb-6">
+                <div class="flex justify-between items-end mb-6">
+                    <div>
+                        <h3 class="text-lg md:text-xl font-serif text-textDark mb-1">Daftar Tamu Undangan</h3>
+                        <p class="text-[10px] md:text-xs text-textMuted">Catat semua orang penting biar nggak ada yang kelewat.</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-2xl font-serif text-accentRed" id="stat-total-pax">0</div>
+                        <div class="text-[10px] md:text-xs text-textMuted">Total Pax</div>
+                    </div>
+                </div>
+                <form id="form-tamu" class="flex flex-col md:flex-row gap-3 md:gap-4 mb-6 bg-[#FCFAF8] p-4 rounded-xl border border-cardBorder items-end">
+                    <div class="flex-1 w-full"><label class="block text-[10px] md:text-xs text-textMuted mb-1">Nama Tamu</label><input type="text" id="tamu-nama" required class="w-full text-xs md:text-sm border-gray-300 rounded-lg p-2 border outline-none focus:ring-1 focus:ring-accentRed"></div>
+                    <div class="w-full md:w-32"><label class="block text-[10px] md:text-xs text-textMuted mb-1">Pihak</label><select id="tamu-pihak" class="w-full text-xs md:text-sm border-gray-300 rounded-lg p-2 border outline-none focus:ring-1 focus:ring-accentRed"><option value="Rikki">Rikki</option><option value="Puri">Puri</option><option value="Keluarga">Keluarga</option></select></div>
+                    <div class="w-full md:w-32"><label class="block text-[10px] md:text-xs text-textMuted mb-1">Kategori</label><select id="tamu-kategori" class="w-full text-xs md:text-sm border-gray-300 rounded-lg p-2 border outline-none focus:ring-1 focus:ring-accentRed"><option value="Keluarga">Keluarga</option><option value="Teman">Teman</option><option value="Kerja">Kerja</option><option value="VIP">VIP</option></select></div>
+                    <div class="w-full md:w-20"><label class="block text-[10px] md:text-xs text-textMuted mb-1">Pax</label><input type="number" id="tamu-pax" required value="1" min="1" class="w-full text-xs md:text-sm border-gray-300 rounded-lg p-2 border outline-none focus:ring-1 focus:ring-accentRed"></div>
+                    <button type="submit" class="w-full md:w-auto bg-accentRed text-white px-5 py-2 rounded-lg text-xs md:text-sm font-medium hover:bg-[#7d4e4a] active:scale-95 transition-all shadow-sm">Tambah</button>
+                </form>
+                <div class="space-y-3" id="list-tamu"></div>
+            </div>
+        </div>
+
+        <!-- 3. VIEW VENDOR -->
+        <div id="view-vendor" class="hidden animate-slide-up">
+            <div class="bg-white p-5 md:p-6 rounded-xl border border-cardBorder shadow-sm mb-6">
+                <h3 class="text-lg md:text-xl font-serif text-textDark mb-1">Manajemen Vendor</h3>
+                <p class="text-[10px] md:text-xs text-textMuted mb-6">Pantau status pembayaran semua vendor di sini.</p>
+                <form id="form-vendor" class="flex flex-col md:flex-row gap-3 md:gap-4 mb-6 bg-[#FCFAF8] p-4 rounded-xl border border-cardBorder items-end">
+                    <div class="flex-1 w-full"><label class="block text-[10px] md:text-xs text-textMuted mb-1">Nama Vendor / Toko</label><input type="text" id="vendor-nama" required class="w-full text-xs md:text-sm border-gray-300 rounded-lg p-2 border outline-none focus:ring-1 focus:ring-accentRed"></div>
+                    <div class="w-full md:w-40"><label class="block text-[10px] md:text-xs text-textMuted mb-1">Kategori</label><select id="vendor-kategori" class="w-full text-xs md:text-sm border-gray-300 rounded-lg p-2 border outline-none focus:ring-1 focus:ring-accentRed"><option value="Venue">Venue</option><option value="Katering">Katering</option><option value="MUA & Baju">MUA & Baju</option><option value="Dekorasi">Dekorasi</option><option value="Dokumentasi">Dokumentasi</option><option value="WO">WO</option><option value="Lainnya">Lainnya</option></select></div>
+                    <div class="w-full md:w-40"><label class="block text-[10px] md:text-xs text-textMuted mb-1">Total (Rp)</label><input type="number" id="vendor-harga" required class="w-full text-xs md:text-sm border-gray-300 rounded-lg p-2 border outline-none focus:ring-1 focus:ring-accentRed"></div>
+                    <button type="submit" class="w-full md:w-auto bg-accentRed text-white px-5 py-2 rounded-lg text-xs md:text-sm font-medium hover:bg-[#7d4e4a] active:scale-95 transition-all shadow-sm">Tambah</button>
+                </form>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="list-vendor"></div>
+            </div>
+        </div>
+
+        <!-- 4. VIEW RUNDOWN -->
+        <div id="view-rundown" class="hidden animate-slide-up">
+            <div class="bg-white p-5 md:p-6 rounded-xl border border-cardBorder shadow-sm mb-6">
+                <h3 class="text-lg md:text-xl font-serif text-textDark mb-1">Jadwal Hari H (Rundown)</h3>
+                <p class="text-[10px] md:text-xs text-textMuted mb-6">Biar acara lancar, semua orang tau tugasnya jam berapa.</p>
+                <form id="form-rundown" class="flex flex-col md:flex-row gap-3 md:gap-4 mb-6 bg-[#FCFAF8] p-4 rounded-xl border border-cardBorder items-end">
+                    <div class="w-full md:w-32"><label class="block text-[10px] md:text-xs text-textMuted mb-1">Jam (WIB)</label><input type="time" id="rundown-waktu" required class="w-full text-xs md:text-sm border-gray-300 rounded-lg p-2 border outline-none focus:ring-1 focus:ring-accentRed"></div>
+                    <div class="flex-1 w-full"><label class="block text-[10px] md:text-xs text-textMuted mb-1">Kegiatan / Acara</label><input type="text" id="rundown-acara" required placeholder="Cth: Sesi Foto Keluarga" class="w-full text-xs md:text-sm border-gray-300 rounded-lg p-2 border outline-none focus:ring-1 focus:ring-accentRed"></div>
+                    <div class="w-full md:w-48"><label class="block text-[10px] md:text-xs text-textMuted mb-1">P.I.C (Penanggung Jawab)</label><input type="text" id="rundown-pic" required placeholder="Cth: Tante Mia / WO" class="w-full text-xs md:text-sm border-gray-300 rounded-lg p-2 border outline-none focus:ring-1 focus:ring-accentRed"></div>
+                    <button type="submit" class="w-full md:w-auto bg-accentRed text-white px-5 py-2 rounded-lg text-xs md:text-sm font-medium hover:bg-[#7d4e4a] active:scale-95 transition-all shadow-sm">Tambah</button>
+                </form>
+                <div class="relative border-l-2 border-accentPink ml-3 md:ml-4 space-y-6" id="list-rundown"></div>
+            </div>
+        </div>
+
+        <!-- 5. VIEW REFERENSI LINK -->
+        <div id="view-referensi" class="hidden animate-slide-up">
+            <div class="bg-white p-5 md:p-6 rounded-xl border border-cardBorder shadow-sm mb-6">
+                <h3 class="text-lg md:text-xl font-serif text-textDark mb-1">Moodboard & Referensi</h3>
+                <p class="text-[10px] md:text-xs text-textMuted mb-6">Simpan link Shopee, Tokopedia, Instagram, atau Pinterest kalian di sini.</p>
+                <form id="form-referensi" class="flex flex-col md:flex-row gap-3 md:gap-4 mb-6 bg-[#FCFAF8] p-4 rounded-xl border border-cardBorder items-end">
+                    <div class="w-full md:w-48"><label class="block text-[10px] md:text-xs text-textMuted mb-1">Judul / Barang</label><input type="text" id="ref-judul" required placeholder="Cth: Cincin Tunangan" class="w-full text-xs md:text-sm border-gray-300 rounded-lg p-2 border outline-none focus:ring-1 focus:ring-accentRed"></div>
+                    <div class="flex-1 w-full"><label class="block text-[10px] md:text-xs text-textMuted mb-1">URL (Link Web)</label><input type="url" id="ref-url" required placeholder="https://shopee.co.id/..." class="w-full text-xs md:text-sm border-gray-300 rounded-lg p-2 border outline-none focus:ring-1 focus:ring-accentRed"></div>
+                    <div class="w-full md:w-32"><label class="block text-[10px] md:text-xs text-textMuted mb-1">Kategori</label><select id="ref-kategori" class="w-full text-xs md:text-sm border-gray-300 rounded-lg p-2 border outline-none focus:ring-1 focus:ring-accentRed"><option value="Cincin">Cincin</option><option value="Gaun/Jas">Gaun/Jas</option><option value="Dekorasi">Dekorasi</option><option value="Souvenir">Souvenir</option><option value="Lainnya">Lainnya</option></select></div>
+                    <button type="submit" class="w-full md:w-auto bg-accentRed text-white px-5 py-2 rounded-lg text-xs md:text-sm font-medium hover:bg-[#7d4e4a] active:scale-95 transition-all shadow-sm">Simpan Link</button>
+                </form>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="list-referensi"></div>
+            </div>
+        </div>
+
+        <!-- 6. GRID ANGGARAN & CHECKLIST -->
+        <div id="grid-cards" class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6 animate-slide-up">
+            <div id="card-anggaran" class="bg-white p-5 md:p-6 rounded-xl border border-cardBorder shadow-sm flex flex-col hover:shadow-md transition-shadow duration-300">
                 <div class="flex justify-between items-start mb-2">
-                    <h3 class="text-lg font-serif text-textDark">Gambaran anggaran</h3>
-                    <a href="#" onclick="toggleAturAnggaran(event)" class="text-xs text-accentRed font-medium hover:text-[#7d4e4a] bg-red-50 px-2 py-1 rounded">Atur anggaran &rarr;</a>
+                    <h3 class="text-base md:text-lg font-serif text-textDark">Gambaran anggaran</h3>
+                    <a href="#" onclick="document.getElementById('form-anggaran').classList.toggle('hidden'); document.getElementById('form-anggaran').classList.toggle('flex'); event.preventDefault();" class="text-[10px] md:text-xs text-accentRed bg-red-50 px-2 py-1 rounded hover:bg-red-100 transition-colors">Atur &rarr;</a>
                 </div>
-                <p class="text-xs text-textMuted mb-6">Rencana awal Rp50 juta, bisa disesuaikan kapan saja.</p>
-
-                <div class="flex justify-between items-end border-b border-cardBorder pb-2 mb-4">
-                    <div id="teks-total-anggaran" class="text-2xl font-serif">Rp 0</div>
-                    <div id="teks-sisa-anggaran" class="text-xs text-textMuted">dari Rp50 jt • sisa Rp50 jt</div>
+                <div class="flex justify-between items-end border-b border-cardBorder pb-2 mb-4 mt-4">
+                    <div id="teks-total-anggaran" class="text-xl md:text-2xl font-serif">Rp 0</div>
+                    <div id="teks-sisa-anggaran" class="text-[10px] md:text-xs text-textMuted">sisa Rp50 jt</div>
                 </div>
-
-                <div class="w-full h-1.5 bg-[#F0EAE5] rounded-full mb-6 relative overflow-hidden">
-                    <div id="bar-anggaran" class="absolute top-0 left-0 h-full bg-[#523A36] rounded-full transition-all w-0"></div>
-                </div>
-
+                <div class="w-full h-1.5 bg-[#F0EAE5] rounded-full mb-4 relative overflow-hidden"><div id="bar-anggaran" class="absolute top-0 left-0 h-full bg-[#523A36] rounded-full w-0 transition-all duration-1000 ease-out"></div></div>
                 <div id="list-anggaran" class="space-y-0 flex-1"></div>
-
                 <form id="form-anggaran" class="hidden mt-4 pt-4 border-t border-dashed border-gray-200 flex-col gap-2">
-                    <div class="text-xs font-medium text-textMuted mb-1">Tambah Pengeluaran Baru</div>
-                    <input type="text" id="input-nama-anggaran" placeholder="Nama pengeluaran..." required class="w-full text-sm border-gray-300 rounded-lg focus:ring-accentRed p-2.5 border outline-none bg-[#FCFAF8]">
+                    <input type="text" id="input-nama-anggaran" placeholder="Nama pengeluaran..." required class="w-full text-xs md:text-sm border-gray-300 rounded-lg p-2 border bg-[#FCFAF8] focus:ring-1 focus:ring-accentRed">
                     <div class="flex gap-2">
-                        <input type="number" id="input-nominal-anggaran" placeholder="Nominal (Rp)..." required class="flex-1 text-sm border-gray-300 rounded-lg p-2.5 border outline-none bg-[#FCFAF8]">
-                        <input type="color" id="input-warna-anggaran" value="#965E59" class="w-11 h-11 p-1 rounded-lg cursor-pointer border border-gray-300 bg-white">
-                        <button type="submit" class="bg-accentRed text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#7d4e4a] transition-colors">Tambah</button>
+                        <input type="number" id="input-nominal-anggaran" placeholder="Nominal (Rp)..." required class="flex-1 text-xs md:text-sm border-gray-300 rounded-lg p-2 border bg-[#FCFAF8] focus:ring-1 focus:ring-accentRed">
+                        <input type="color" id="input-warna-anggaran" value="#965E59" class="w-9 h-9 md:w-11 md:h-11 p-0.5 rounded-lg cursor-pointer bg-white border hover:shadow-sm">
+                        <button type="submit" class="bg-accentRed text-white px-3 py-2 rounded-lg text-sm hover:bg-[#7d4e4a] active:scale-95 transition-all">Tambah</button>
                     </div>
                 </form>
             </div>
 
-            <!-- Langkah Berikutnya (Checklist) Card -->
-            <div id="card-checklist" class="bg-white p-6 rounded-xl border border-cardBorder shadow-sm flex flex-col h-fit">
-                <div class="flex justify-between items-start mb-2">
-                    <h3 class="text-lg font-serif text-textDark">Langkah berikutnya</h3>
-                    <a href="#" id="btn-lihat-semua" onclick="toggleLihatSemuaChecklist(event)" class="text-xs text-textMuted hover:text-textDark">Lihat semua &rarr;</a>
+            <div id="card-checklist" class="bg-white p-5 md:p-6 rounded-xl border border-cardBorder shadow-sm flex flex-col hover:shadow-md transition-shadow duration-300">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-base md:text-lg font-serif text-textDark">Langkah berikutnya</h3>
+                    <a href="#" onclick="showAllChecklist = !showAllChecklist; renderChecklist(); event.preventDefault();" class="text-[10px] md:text-xs text-textMuted hover:text-textDark transition-colors">Lihat semua &rarr;</a>
                 </div>
-                <p class="text-xs text-textMuted mb-6">Yang dekat-dekat dulu, satu per satu.</p>
-
-                <div id="list-checklist" class="space-y-4 flex-1 mb-6"></div>
-
+                <div id="list-checklist" class="space-y-3 md:space-y-4 flex-1 mb-6"></div>
                 <form id="form-checklist" class="mt-auto pt-4 border-t border-dashed border-gray-200 flex gap-2">
-                    <input type="text" id="input-tugas" placeholder="Tambah tugas baru..." required class="flex-1 text-sm border-gray-300 rounded-lg focus:ring-accentRed p-2.5 border outline-none bg-[#FCFAF8]">
-                    <select id="input-kategori" class="text-xs border-gray-300 rounded-lg p-2.5 border outline-none bg-[#FCFAF8]">
-                        <option value="Prioritas">Prioritas</option>
-                        <option value="Santai">Santai</option>
-                    </select>
-                    <button type="submit" class="bg-accentRed text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-[#7d4e4a] transition-colors">+</button>
+                    <input type="text" id="input-tugas" placeholder="Tambah tugas baru..." required class="flex-1 text-xs md:text-sm border-gray-300 rounded-lg p-2 border bg-[#FCFAF8] focus:ring-1 focus:ring-accentRed">
+                    <select id="input-kategori" class="text-xs border-gray-300 rounded-lg p-2 border bg-[#FCFAF8] focus:ring-1 focus:ring-accentRed"><option value="Prioritas">Prioritas</option><option value="Santai">Santai</option></select>
+                    <button type="submit" class="bg-accentRed text-white px-4 py-2 rounded-lg font-medium hover:bg-[#7d4e4a] active:scale-95 transition-all shadow-sm">+</button>
                 </form>
             </div>
         </div>
 
-        <!-- Catatan Tabungan Card -->
-        <div id="view-tabungan" class="bg-white p-6 rounded-xl border border-cardBorder shadow-sm mb-12">
-            <h3 class="text-xl font-serif text-textDark mb-2">Catatan Tabungan</h3>
-            <p class="text-sm text-textMuted mb-6">Catat dana yang udah berhasil kalian kumpulin berdua di sini.</p>
-            
-            <form id="form-tabungan" class="flex flex-col md:flex-row gap-4 items-end mb-8 bg-[#FCFAF8] p-5 rounded-xl border border-cardBorder">
-                <div class="flex-1 w-full">
-                    <label class="block text-xs font-medium text-textMuted mb-1.5">Tanggal Nabung</label>
-                    <input type="date" id="tgl-nabung" required class="w-full text-sm border-gray-300 rounded-lg focus:ring-accentRed p-2.5 border outline-none">
-                </div>
-                <div class="flex-1 w-full">
-                    <label class="block text-xs font-medium text-textMuted mb-1.5">Siapa yang setor?</label>
-                    <select id="penabung" class="w-full text-sm border-gray-300 rounded-lg focus:ring-accentRed p-2.5 border outline-none bg-white">
-                        <option value="Rikki">Rikki</option>
-                        <option value="Puri">Puri</option>
-                        <option value="Berdua (Bareng)">Berdua (Bareng)</option>
-                    </select>
-                </div>
-                <div class="flex-1 w-full">
-                    <label class="block text-xs font-medium text-textMuted mb-1.5">Jumlah Uang (Rp)</label>
-                    <input type="number" id="jumlah-nabung" required placeholder="Contoh: 500000" class="w-full text-sm border-gray-300 rounded-lg focus:ring-accentRed p-2.5 border outline-none">
-                </div>
-                <button type="submit" class="w-full md:w-auto bg-accentRed text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-[#7d4e4a] transition-colors">
-                    Catat Tabungan
-                </button>
+        <!-- 7. VIEW TABUNGAN -->
+        <div id="view-tabungan" class="animate-slide-up bg-white p-5 md:p-6 rounded-xl border border-cardBorder shadow-sm mb-6">
+            <h3 class="text-lg md:text-xl font-serif text-textDark mb-1">Catatan Tabungan</h3>
+            <form id="form-tabungan" class="flex flex-col md:flex-row gap-3 md:gap-4 items-end mb-6 bg-[#FCFAF8] p-4 rounded-xl border border-cardBorder mt-4">
+                <div class="w-full md:w-1/3"><label class="block text-xs mb-1 text-textMuted">Tanggal</label><input type="date" id="tgl-nabung" required class="w-full text-sm rounded-lg p-2 border outline-none focus:ring-1 focus:ring-accentRed"></div>
+                <div class="w-full md:w-1/3"><label class="block text-xs mb-1 text-textMuted">Setor</label><select id="penabung" class="w-full text-sm rounded-lg p-2 border focus:ring-1 focus:ring-accentRed"><option value="Rikki">Rikki</option><option value="Puri">Puri</option><option value="Berdua">Berdua</option></select></div>
+                <div class="w-full md:w-1/3"><label class="block text-xs mb-1 text-textMuted">Jumlah Uang (Rp)</label><input type="number" id="jumlah-nabung" required class="w-full text-sm rounded-lg p-2 border outline-none focus:ring-1 focus:ring-accentRed"></div>
+                <button type="submit" class="w-full md:w-auto bg-accentRed text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-[#7d4e4a] active:scale-95 transition-all shadow-sm">Catat</button>
             </form>
-
-            <div class="space-y-4 mb-6" id="list-tabungan"></div>
-            
-            <div class="pt-5 border-t border-cardBorder flex justify-between items-center">
-                <span class="text-sm font-medium text-textMuted">Total Tabungan Terkumpul:</span>
-                <span id="total-tabungan-bawah" class="text-2xl font-serif text-accentRed">Rp 0</span>
-            </div>
+            <div class="space-y-3 mb-6" id="list-tabungan"></div>
+            <div class="pt-4 border-t flex justify-between"><span class="text-sm font-medium text-textMuted">Total:</span><span id="total-tabungan-bawah" class="text-2xl font-serif text-accentRed">Rp 0</span></div>
         </div>
-
     </main>
 
-    <!-- LOGIKA JAVASCRIPT & SUPABASE -->
+    <!-- Bottom Navigation Bar (Mobile) -->
+    <nav class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-cardBorder flex items-center h-16 z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] overflow-x-auto px-1 gap-2 hide-scrollbar">
+        <button onclick="gantiMenu('ringkasan')" id="menu-mobile-ringkasan" class="menu-btn-mobile min-w-[65px] flex flex-col items-center justify-center text-accentRed font-medium transition-colors text-[10px] gap-1 active:scale-95 duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg> Home
+        </button>
+        <button onclick="gantiMenu('tamu')" id="menu-mobile-tamu" class="menu-btn-mobile min-w-[65px] flex flex-col items-center justify-center text-textMuted hover:text-accentRed transition-colors text-[10px] gap-1 active:scale-95 duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg> Tamu
+        </button>
+        <button onclick="gantiMenu('anggaran')" id="menu-mobile-anggaran" class="menu-btn-mobile min-w-[65px] flex flex-col items-center justify-center text-textMuted hover:text-accentRed transition-colors text-[10px] gap-1 active:scale-95 duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Dana
+        </button>
+        <button onclick="gantiMenu('tabungan')" id="menu-mobile-tabungan" class="menu-btn-mobile min-w-[65px] flex flex-col items-center justify-center text-textMuted hover:text-accentRed transition-colors text-[10px] gap-1 active:scale-95 duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg> Nabung
+        </button>
+        <button onclick="gantiMenu('checklist')" id="menu-mobile-checklist" class="menu-btn-mobile min-w-[65px] flex flex-col items-center justify-center text-textMuted hover:text-accentRed transition-colors text-[10px] gap-1 active:scale-95 duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg> Tugas
+        </button>
+        <div class="h-8 w-px bg-gray-200 mx-1 shrink-0"></div>
+        <button onclick="gantiMenu('vendor')" id="menu-mobile-vendor" class="menu-btn-mobile min-w-[65px] flex flex-col items-center justify-center text-textMuted hover:text-accentRed transition-colors text-[10px] gap-1 active:scale-95 duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg> Vendor
+        </button>
+        <button onclick="gantiMenu('rundown')" id="menu-mobile-rundown" class="menu-btn-mobile min-w-[65px] flex flex-col items-center justify-center text-textMuted hover:text-accentRed transition-colors text-[10px] gap-1 active:scale-95 duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Rundown
+        </button>
+        <button onclick="gantiMenu('referensi')" id="menu-mobile-referensi" class="menu-btn-mobile min-w-[65px] flex flex-col items-center justify-center text-textMuted hover:text-accentRed transition-colors text-[10px] gap-1 mr-4 active:scale-95 duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg> Ref/Link
+        </button>
+    </nav>
+
+    <!-- JAVASCRIPT & SUPABASE -->
     <script>
-        // ==========================================
-        // INISIALISASI SUPABASE (GANTI URL & KEY DI SINI)
-        // ==========================================
         const supabaseUrl = 'https://jgjixdbnbzfpnvooczew.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impnaml4ZGJuYnpmcG52b29jemV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0NTQ0OTEsImV4cCI6MjA5NjAzMDQ5MX0.npVGc6YPMWQYW8q1CvGDDluMlNsQarAtql433icPdx0';
-        
-        // Kita namain supabaseClient biar ngga bentrok sama library bawaan
         const { createClient } = supabase;
         const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
-        const TARGET_DANA = 50000000; // Target Rp 50 Juta
+        const TARGET_DANA = 50000000;
         const trashIcon = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>`;
+        const quotes = ["Capeknya bareng-bareng, bahagianya juga bareng-bareng.", "Mempersiapkan hari bahagia tanpa tekanan.", "Satu langkah kecil menuju hari besar.", "Kerja sama berdua pasti bisa!", "Jangan lupa senyum hari ini! ✨", "Saling bantu, saling mengerti. 🤍"];
 
-        let dataTabungan = [];
-        let dataAnggaran = [];
-        let dataChecklist = [];
-        let showAllChecklist = false;
+        let dataTabungan=[], dataAnggaran=[], dataChecklist=[], dataTamu=[], dataVendor=[], dataRundown=[], dataReferensi=[], dataPesan=[];
+        let targetHari=null; let showAllChecklist=false;
 
-        // UI Helpers
+        // FUNGSI PEMANIS
+        function updateSapaan() {
+            const jam = new Date().getHours();
+            let sapaan = 'Halo';
+            if(jam >= 5 && jam < 11) sapaan = 'Selamat pagi'; else if(jam >= 11 && jam < 15) sapaan = 'Selamat siang'; else if(jam >= 15 && jam < 18) sapaan = 'Selamat sore'; else sapaan = 'Selamat malam';
+            document.getElementById('teks-sapaan').innerText = `${sapaan}, Rikki & Puri!`;
+            document.getElementById('teks-quote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+        }
+        function showToast(msg, icon='✨') {
+            const cont = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'bg-white border border-cardBorder shadow-lg rounded-full px-4 py-2 flex items-center gap-2 text-xs font-medium text-textDark animate-toast';
+            toast.innerHTML = `<span class="text-sm">${icon}</span> ${msg}`;
+            cont.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3000);
+        }
+        
         function showLoading() { document.getElementById('status-loading').classList.remove('hidden'); document.getElementById('status-loading').classList.add('flex'); }
         function hideLoading() { document.getElementById('status-loading').classList.add('hidden'); document.getElementById('status-loading').classList.remove('flex'); }
         function formatRupiah(angka) { return new Intl.NumberFormat('id-ID').format(angka); }
         function formatDate(dateString) { return new Date(dateString).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }); }
 
-        // ==========================================
-        // FITUR PINDAH TAB / MENU
-        // ==========================================
-        function gantiMenu(menu) {
-            document.querySelectorAll('.menu-btn').forEach(btn => {
-                btn.className = 'menu-btn flex items-center gap-3 px-4 py-2.5 text-textMuted hover:bg-gray-50 rounded-lg text-sm transition-colors';
+        // NAVIGASI
+        const semuaMenu = ['ringkasan', 'tamu', 'anggaran', 'tabungan', 'checklist', 'vendor', 'rundown', 'referensi'];
+        function gantiMenu(menuAktif) {
+            semuaMenu.forEach(m => {
+                let deskBtn = document.getElementById('menu-desktop-' + m); let mobBtn = document.getElementById('menu-mobile-' + m);
+                if(deskBtn) deskBtn.className = 'menu-btn-desktop flex items-center gap-3 px-4 py-2.5 text-textMuted hover:bg-gray-50 rounded-lg text-sm transition-all duration-200';
+                if(mobBtn) mobBtn.className = 'menu-btn-mobile min-w-[65px] flex flex-col items-center justify-center text-textMuted hover:text-accentRed transition-colors text-[10px] gap-1 active:scale-95 duration-200';
             });
-            const menuAktif = document.getElementById('menu-' + menu);
-            menuAktif.className = 'menu-btn flex items-center gap-3 px-4 py-2.5 bg-accentPink rounded-lg text-textDark font-medium text-sm transition-colors';
+            let actDesk = document.getElementById('menu-desktop-' + menuAktif); let actMob = document.getElementById('menu-mobile-' + menuAktif);
+            if(actDesk) actDesk.className = 'menu-btn-desktop flex items-center gap-3 px-4 py-2.5 bg-accentPink rounded-lg text-textDark font-medium text-sm transition-all duration-200 shadow-sm';
+            if(actMob) actMob.className = 'menu-btn-mobile min-w-[65px] flex flex-col items-center justify-center text-accentRed font-medium transition-colors text-[10px] gap-1 active:scale-95 duration-200';
+            
+            let namaHeader = menuAktif.charAt(0).toUpperCase() + menuAktif.slice(1); if(menuAktif === 'referensi') namaHeader = 'Moodboard & Link';
+            document.getElementById('teks-breadcrumb').innerText = namaHeader;
 
-            document.getElementById('teks-breadcrumb').innerText = menu.charAt(0).toUpperCase() + menu.slice(1);
-
-            const viewHero = document.getElementById('view-hero');
-            const viewTabungan = document.getElementById('view-tabungan');
-            const gridCards = document.getElementById('grid-cards');
-            const cardAnggaran = document.getElementById('card-anggaran');
-            const cardChecklist = document.getElementById('card-checklist');
-
-            if (menu === 'ringkasan') {
-                viewHero.style.display = 'block';
-                viewTabungan.style.display = 'block';
-                gridCards.style.display = 'grid';
-                gridCards.className = 'grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 transition-all duration-300';
-                cardAnggaran.style.display = 'flex';
-                cardChecklist.style.display = 'flex';
-            } else if (menu === 'anggaran') {
-                viewHero.style.display = 'none';
-                viewTabungan.style.display = 'none';
-                gridCards.style.display = 'grid';
-                gridCards.className = 'grid grid-cols-1 gap-6 mb-6 transition-all duration-300';
-                cardAnggaran.style.display = 'flex';
-                cardChecklist.style.display = 'none';
-            } else if (menu === 'checklist') {
-                viewHero.style.display = 'none';
-                viewTabungan.style.display = 'none';
-                gridCards.style.display = 'grid';
-                gridCards.className = 'grid grid-cols-1 gap-6 mb-6 transition-all duration-300';
-                cardAnggaran.style.display = 'none';
-                cardChecklist.style.display = 'flex';
-            } else if (menu === 'tabungan') {
-                viewHero.style.display = 'none';
-                viewTabungan.style.display = 'block';
-                gridCards.style.display = 'none';
-            }
-            document.getElementById('main-scroll').scrollTo(0, 0);
+            const views = {'ringkasan': ['view-hero', 'view-tabungan', 'grid-cards'], 'tamu': ['view-tamu'], 'anggaran': ['grid-cards'], 'tabungan': ['view-tabungan'], 'checklist': ['grid-cards'], 'vendor': ['view-vendor'], 'rundown': ['view-rundown'], 'referensi': ['view-referensi']};
+            ['view-hero', 'view-tamu', 'view-vendor', 'view-rundown', 'view-referensi', 'view-tabungan', 'grid-cards', 'card-anggaran', 'card-checklist'].forEach(id => { let el = document.getElementById(id); if(el) { el.style.display = 'none'; el.classList.remove('animate-slide-up'); }});
+            
+            setTimeout(() => {
+                views[menuAktif].forEach(id => { let el = document.getElementById(id); if(el) { el.style.display = (id === 'grid-cards') ? 'grid' : 'block'; if(id === 'grid-cards') { el.className = (menuAktif === 'ringkasan') ? 'grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6 animate-slide-up' : 'grid grid-cols-1 gap-4 md:gap-6 mb-6 animate-slide-up'; } else { el.classList.add('animate-slide-up'); }}});
+                if(menuAktif === 'ringkasan') { document.getElementById('card-anggaran').style.display = 'flex'; document.getElementById('card-checklist').style.display = 'flex'; } else if(menuAktif === 'anggaran') { document.getElementById('card-anggaran').style.display = 'flex'; } else if(menuAktif === 'checklist') { document.getElementById('card-checklist').style.display = 'flex'; }
+            }, 10); document.getElementById('main-scroll').scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ==========================================
-        // FETCH DATA DARI SUPABASE
-        // ==========================================
         async function fetchSemuaData() {
             showLoading();
             try {
-                const [resTb, resAg, resCl] = await Promise.all([
-                    supabaseClient.from('tabungan').select('*'),
-                    supabaseClient.from('anggaran').select('*'),
-                    supabaseClient.from('checklist').select('*')
+                const [resTb, resAg, resCl, resPg, resTm, resVn, resRd, resRf, resPs] = await Promise.all([
+                    supabaseClient.from('tabungan').select('*'), supabaseClient.from('anggaran').select('*'),
+                    supabaseClient.from('checklist').select('*'), supabaseClient.from('pengaturan').select('*').eq('id', 1).single(),
+                    supabaseClient.from('tamu').select('*'), supabaseClient.from('vendor').select('*'),
+                    supabaseClient.from('rundown').select('*').order('waktu', { ascending: true }), supabaseClient.from('referensi').select('*'),
+                    supabaseClient.from('pesan_cinta').select('*') // Handle error aman kalo blm ada
                 ]);
-                
-                if (resTb.data) dataTabungan = resTb.data;
-                if (resAg.data) dataAnggaran = resAg.data;
-                if (resCl.data) dataChecklist = resCl.data;
-
-                renderTabungan();
-                renderAnggaran();
-                renderChecklist();
-            } catch (err) {
-                console.error("Gagal load data:", err);
-            } finally {
-                hideLoading();
-            }
+                if (resTb.data) dataTabungan = resTb.data; if (resAg.data) dataAnggaran = resAg.data;
+                if (resCl.data) dataChecklist = resCl.data; if (resTm.data) dataTamu = resTm.data;
+                if (resVn.data) dataVendor = resVn.data; if (resRd.data) dataRundown = resRd.data;
+                if (resRf.data) dataReferensi = resRf.data; if (resPs.data) dataPesan = resPs.data;
+                if (resPg.data && resPg.data.target_hari) { targetHari = resPg.data.target_hari; document.getElementById('input-target-hari').value = targetHari; }
+                renderSemuaUI();
+            } catch (err) { console.error("Error Fetch:", err); } finally { hideLoading(); }
         }
 
-        // ==========================================
-        // 1. DATA & LOGIKA TABUNGAN
-        // ==========================================
-        async function hapusTabungan(id) {
-            showLoading();
-            await supabaseClient.from('tabungan').delete().eq('id', id);
-            await fetchSemuaData();
+        function renderSemuaUI() { renderSisaWaktu(); renderTabungan(); renderAnggaran(); renderChecklist(); renderTamu(); renderVendor(); renderRundown(); renderReferensi(); renderPesan(); }
+
+        async function updateTargetHari(newDate) { if (!newDate) return; showLoading(); await supabaseClient.from('pengaturan').upsert({ id: 1, target_hari: newDate }); targetHari = newDate; renderSisaWaktu(); hideLoading(); showToast('Target hari diperbarui! 🗓️'); }
+        function renderSisaWaktu() { if (!targetHari) return; document.getElementById('stat-tgl-target').innerText = formatDate(targetHari); const diffDays = Math.ceil((new Date(targetHari).setHours(0,0,0,0) - new Date().setHours(0,0,0,0)) / (1000 * 60 * 60 * 24)); document.getElementById('stat-sisa-hari').innerHTML = `${diffDays >= 0 ? diffDays : 0} <span class="text-sm">hari</span>`; }
+
+        // ================= PESAN CINTA =================
+        document.getElementById('form-pesan').addEventListener('submit', async (e) => { e.preventDefault(); const p=document.getElementById('pesan-pengirim').value; const i=document.getElementById('pesan-isi').value; showLoading(); await supabaseClient.from('pesan_cinta').insert([{ pengirim:p, pesan:i }]); document.getElementById('pesan-isi').value = ''; showToast('Pesan terkirim! 💌'); await fetchSemuaData(); });
+        async function hapusPesan(id) { showLoading(); await supabaseClient.from('pesan_cinta').delete().eq('id', id); await fetchSemuaData(); }
+        function renderPesan() {
+            const list = document.getElementById('list-pesan'); list.innerHTML = '';
+            if(dataPesan.length === 0) list.innerHTML = `<p class="text-[10px] md:text-xs text-textMuted italic">Belum ada pesan. Yuk kasih semangat! 🥰</p>`;
+            [...dataPesan].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).forEach(item => {
+                const color = item.pengirim === 'Rikki' ? 'bg-[#825B53]' : 'bg-[#CD9A93]';
+                list.innerHTML += `<div class="bg-white/80 p-2 md:p-3 rounded-lg flex gap-2 md:gap-3 items-start group shadow-sm border border-white"><div class="w-6 h-6 md:w-7 md:h-7 rounded-full ${color} text-white flex items-center justify-center font-serif text-[10px] shrink-0">${item.pengirim.charAt(0)}</div><div class="flex-1"><div class="font-medium text-[10px] text-textDark">${item.pengirim}</div><div class="text-[10px] md:text-xs text-textMuted leading-snug">${item.pesan}</div></div><button onclick="hapusPesan(${item.id})" class="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all text-xs">x</button></div>`;
+            });
         }
 
-        document.getElementById('form-tabungan').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const tgl = document.getElementById('tgl-nabung').value;
-            const penabung = document.getElementById('penabung').value;
-            const jumlah = parseInt(document.getElementById('jumlah-nabung').value);
-            
-            if(tgl && jumlah > 0) {
-                showLoading();
-                await supabaseClient.from('tabungan').insert([{ tgl, penabung, jumlah }]);
-                document.getElementById('jumlah-nabung').value = ''; 
-                await fetchSemuaData();
-            }
-        });
+        // ================= FITUR LAMA DENGAN TOAST & EMPTY STATE =================
+        // TAMU
+        document.getElementById('form-tamu').addEventListener('submit', async (e) => { e.preventDefault(); showLoading(); await supabaseClient.from('tamu').insert([{ nama: document.getElementById('tamu-nama').value, pihak: document.getElementById('tamu-pihak').value, kategori: document.getElementById('tamu-kategori').value, pax: parseInt(document.getElementById('tamu-pax').value), status: 'Menunggu' }]); document.getElementById('tamu-nama').value = ''; document.getElementById('tamu-pax').value = '1'; showToast('Tamu berhasil ditambahkan! 👥'); await fetchSemuaData(); });
+        async function hapusTamu(id) { showLoading(); await supabaseClient.from('tamu').delete().eq('id', id); showToast('Tamu dihapus. 🗑️'); await fetchSemuaData(); }
+        async function updateStatusTamu(id, status) { showLoading(); await supabaseClient.from('tamu').update({ status }).eq('id', id); showToast('Status kehadiran diperbarui! 👍'); await fetchSemuaData(); }
+        function renderTamu() {
+            let list = document.getElementById('list-tamu'), total = 0; list.innerHTML = ''; if(dataTamu.length === 0) list.innerHTML = `<p class="text-xs text-textMuted py-4 text-center border border-dashed rounded-lg">Belum ada tamu nih. Coba *list* keluarga inti dulu yuk! 👨‍👩‍👧‍👦</p>`;
+            dataTamu.forEach(item => { total += item.pax; let badge = item.status === 'Hadir' ? 'bg-green-50 text-green-600 border-green-200' : (item.status === 'Tidak Hadir' ? 'bg-red-50 text-red-600 border-red-200' : 'bg-yellow-50 text-yellow-600 border-yellow-200'); list.innerHTML += `<div class="flex justify-between items-center bg-[#FDFBF9] p-3 rounded-lg border border-cardBorder hover:-translate-x-1 hover:border-red-100 transition-all duration-300"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-[#E5E0DC] flex items-center justify-center font-serif text-xs">${item.nama.charAt(0)}</div><div><div class="font-medium text-sm">${item.nama}</div><div class="text-[10px] text-textMuted">${item.pihak} • ${item.kategori} • <span class="font-medium text-textDark">${item.pax} Pax</span></div></div></div><div class="flex items-center gap-2"><select onchange="updateStatusTamu(${item.id}, this.value)" class="text-[10px] px-2 py-1 rounded font-medium border ${badge} outline-none cursor-pointer transition-colors"><option value="Menunggu" ${item.status === 'Menunggu'?'selected':''}>Menunggu</option><option value="Hadir" ${item.status === 'Hadir'?'selected':''}>Hadir</option><option value="Tidak Hadir" ${item.status === 'Tidak Hadir'?'selected':''}>Absen</option></select><button onclick="hapusTamu(${item.id})" class="text-gray-300 hover:text-red-500 transition-colors">${trashIcon}</button></div></div>`; }); document.getElementById('stat-total-pax').innerText = total;
+        }
 
+        // VENDOR
+        document.getElementById('form-vendor').addEventListener('submit', async (e) => { e.preventDefault(); showLoading(); await supabaseClient.from('vendor').insert([{ nama: document.getElementById('vendor-nama').value, kategori: document.getElementById('vendor-kategori').value, total_harga: parseInt(document.getElementById('vendor-harga').value) }]); document.getElementById('vendor-nama').value = ''; document.getElementById('vendor-harga').value = ''; showToast('Vendor tersimpan! 🤝'); await fetchSemuaData(); });
+        async function updateStatusVendor(id, status) { showLoading(); await supabaseClient.from('vendor').update({ status }).eq('id', id); showToast('Status bayar diperbarui! 💸'); await fetchSemuaData(); }
+        async function hapusVendor(id) { showLoading(); await supabaseClient.from('vendor').delete().eq('id', id); showToast('Vendor dihapus. 🗑️'); await fetchSemuaData(); }
+        function renderVendor() {
+            const list = document.getElementById('list-vendor'); list.innerHTML = ''; if(dataVendor.length === 0) list.innerHTML = `<div class="col-span-2 text-xs text-textMuted py-4 text-center border border-dashed rounded-lg">Belum ada vendor. Masih bebas milih yang paling sreg di hati! 🎨</div>`;
+            dataVendor.forEach(item => { let badge = item.status === 'Lunas' ? 'bg-green-50 text-green-600 border-green-200' : (item.status === 'DP 1' || item.status === 'DP 2' ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-red-50 text-red-600 border-red-200'); list.innerHTML += `<div class="border border-cardBorder p-4 rounded-xl flex flex-col justify-between bg-[#FDFBF9] hover:-translate-y-1 hover:shadow-md transition-all duration-300"><div class="flex justify-between items-start mb-3"><div><h4 class="font-medium text-sm text-textDark">${item.nama}</h4><p class="text-[10px] text-textMuted">${item.kategori}</p></div><button onclick="hapusVendor(${item.id})" class="text-gray-300 hover:text-red-500 transition-colors">${trashIcon}</button></div><div class="flex justify-between items-end"><div><p class="text-[10px] text-textMuted mb-0.5">Total Harga</p><p class="font-semibold text-sm">Rp ${formatRupiah(item.total_harga)}</p></div><select onchange="updateStatusVendor(${item.id}, this.value)" class="text-[10px] px-2 py-1 rounded font-medium border ${badge} outline-none cursor-pointer transition-colors"><option value="Belum DP" ${item.status === 'Belum DP' ? 'selected' : ''}>Belum DP</option><option value="DP 1" ${item.status === 'DP 1' ? 'selected' : ''}>Sudah DP 1</option><option value="DP 2" ${item.status === 'DP 2' ? 'selected' : ''}>Sudah DP 2</option><option value="Lunas" ${item.status === 'Lunas' ? 'selected' : ''}>Lunas 100%</option></select></div></div>`; });
+        }
+
+        // RUNDOWN
+        document.getElementById('form-rundown').addEventListener('submit', async (e) => { e.preventDefault(); showLoading(); await supabaseClient.from('rundown').insert([{ waktu: document.getElementById('rundown-waktu').value, acara: document.getElementById('rundown-acara').value, pic: document.getElementById('rundown-pic').value }]); document.getElementById('rundown-acara').value = ''; document.getElementById('rundown-pic').value = ''; showToast('Jadwal masuk rundown! ⏰'); await fetchSemuaData(); });
+        async function hapusRundown(id) { showLoading(); await supabaseClient.from('rundown').delete().eq('id', id); await fetchSemuaData(); }
+        function renderRundown() {
+            const list = document.getElementById('list-rundown'); list.innerHTML = ''; if(dataRundown.length === 0) list.innerHTML = `<p class="text-xs text-textMuted py-4 text-center border border-dashed rounded-lg -ml-4">Jadwal masih kosong. Masih bisa santai rebahan dulu~ 🛋️</p>`;
+            dataRundown.forEach(item => { let jamFormat = item.waktu.substring(0, 5); list.innerHTML += `<div class="relative pl-6 group hover:translate-x-1 transition-transform duration-300"><div class="absolute w-3 h-3 bg-accentRed rounded-full -left-[7px] top-1 border-2 border-white group-hover:scale-125 transition-transform duration-300"></div><div class="flex justify-between items-start"><div><div class="font-serif font-bold text-accentRed text-sm">${jamFormat} WIB</div><div class="font-medium text-textDark text-sm mt-0.5">${item.acara}</div><div class="text-[10px] md:text-xs text-textMuted mt-1">PIC: <span class="font-medium text-textDark">${item.pic}</span></div></div><button onclick="hapusRundown(${item.id})" class="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all">${trashIcon}</button></div></div>`; });
+        }
+
+        // REFERENSI
+        document.getElementById('form-referensi').addEventListener('submit', async (e) => { e.preventDefault(); showLoading(); await supabaseClient.from('referensi').insert([{ judul: document.getElementById('ref-judul').value, url: document.getElementById('ref-url').value, kategori: document.getElementById('ref-kategori').value }]); document.getElementById('ref-judul').value = ''; document.getElementById('ref-url').value = ''; showToast('Referensi disimpan! 🔗'); await fetchSemuaData(); });
+        async function hapusReferensi(id) { showLoading(); await supabaseClient.from('referensi').delete().eq('id', id); showToast('Link dihapus. 🗑️'); await fetchSemuaData(); }
+        function renderReferensi() {
+            const list = document.getElementById('list-referensi'); list.innerHTML = ''; if(dataReferensi.length === 0) list.innerHTML = `<div class="col-span-3 text-xs text-textMuted py-4 text-center border border-dashed rounded-lg">Belum ada inspirasi? Yuk mulai nyari-nyari referensi di Sosmed! ✨</div>`;
+            dataReferensi.forEach(item => { list.innerHTML += `<div class="border border-cardBorder p-4 rounded-xl flex flex-col bg-white hover:-translate-y-1 hover:shadow-md transition-all duration-300 group"><div class="flex justify-between items-start mb-2"><span class="text-[9px] bg-accentPink text-accentRed px-2 py-0.5 rounded uppercase tracking-wider font-bold">${item.kategori}</span><button onclick="hapusReferensi(${item.id})" class="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all">${trashIcon}</button></div><h4 class="font-medium text-sm text-textDark mb-3 truncate" title="${item.judul}">${item.judul}</h4><a href="${item.url}" target="_blank" class="mt-auto text-xs bg-gray-50 border border-gray-200 text-center py-2 rounded-lg text-textMuted hover:bg-accentRed hover:text-white transition-colors hover:shadow-sm">Buka Link &rarr;</a></div>`; });
+        }
+
+        // TABUNGAN
+        document.getElementById('form-tabungan').addEventListener('submit', async (e) => { e.preventDefault(); showLoading(); await supabaseClient.from('tabungan').insert([{ tgl: document.getElementById('tgl-nabung').value, penabung: document.getElementById('penabung').value, jumlah: parseInt(document.getElementById('jumlah-nabung').value) }]); document.getElementById('jumlah-nabung').value = ''; showToast('Yeay! Tabungan nambah! 💸', '🎉'); await fetchSemuaData(); });
+        async function hapusTabungan(id) { showLoading(); await supabaseClient.from('tabungan').delete().eq('id', id); await fetchSemuaData(); }
         function renderTabungan() {
-            const listTabungan = document.getElementById('list-tabungan');
-            listTabungan.innerHTML = '';
-            let totalUang = 0;
-
-            const sortedData = [...dataTabungan].sort((a, b) => new Date(b.tgl) - new Date(a.tgl));
-            if (sortedData.length === 0) listTabungan.innerHTML = `<p class="text-sm text-textMuted text-center py-4">Belum ada catatan tabungan.</p>`;
-
-            sortedData.forEach(item => {
-                totalUang += item.jumlah;
-                const inisial = item.penabung.charAt(0);
-                listTabungan.innerHTML += `
-                    <div class="flex justify-between items-center bg-[#FDFBF9] p-4 rounded-lg border border-cardBorder hover:border-red-100 transition-colors group">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-full bg-accentPink flex items-center justify-center text-accentRed font-serif font-medium">${inisial}</div>
-                            <div>
-                                <div class="font-medium text-sm text-textDark">${item.penabung}</div>
-                                <div class="text-xs text-textMuted mt-0.5">${formatDate(item.tgl)}</div>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <div class="font-semibold text-textDark text-sm">Rp ${formatRupiah(item.jumlah)}</div>
-                            <button onclick="hapusTabungan(${item.id})" class="text-gray-300 hover:text-red-500 transition-colors" title="Hapus tabungan">${trashIcon}</button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            document.getElementById('total-tabungan-bawah').innerText = `Rp ${formatRupiah(totalUang)}`;
-            let totalJuta = (totalUang / 1000000).toFixed(1).replace('.0', '');
-            document.getElementById('total-terkumpul').innerHTML = `Rp${totalJuta} <span class="text-lg">jt</span>`;
-            let persen = ((totalUang / TARGET_DANA) * 100).toFixed(1);
-            document.getElementById('persen-terkumpul').innerText = `${persen}% dari total anggaran`;
+            let list = document.getElementById('list-tabungan'), total = 0; list.innerHTML = ''; if(dataTabungan.length === 0) list.innerHTML = `<p class="text-xs text-textMuted text-center py-4 border border-dashed rounded-lg">Celengan kosong nih. Yuk mulai sisihin sedikit demi sedikit! 🐷💸</p>`;
+            [...dataTabungan].sort((a,b) => new Date(b.tgl)-new Date(a.tgl)).forEach(item => { total += item.jumlah; list.innerHTML += `<div class="flex justify-between items-center bg-[#FDFBF9] p-3 rounded-lg border border-cardBorder hover:-translate-x-1 hover:border-red-100 transition-all duration-300"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-accentPink text-accentRed flex items-center justify-center font-serif text-xs">${item.penabung.charAt(0)}</div><div><div class="font-medium text-sm">${item.penabung}</div><div class="text-[10px] text-textMuted">${formatDate(item.tgl)}</div></div></div><div class="flex items-center gap-3"><div class="font-semibold text-sm">Rp ${formatRupiah(item.jumlah)}</div><button onclick="hapusTabungan(${item.id})" class="text-gray-300 hover:text-red-500 transition-colors">${trashIcon}</button></div></div>`; });
+            document.getElementById('total-tabungan-bawah').innerText = `Rp ${formatRupiah(total)}`; document.getElementById('total-terkumpul').innerHTML = `Rp${(total/1000000).toFixed(1).replace('.0','')} <span class="text-sm">jt</span>`; document.getElementById('persen-terkumpul').innerText = `${((total/TARGET_DANA)*100).toFixed(1)}% dari total`;
         }
 
-        // ==========================================
-        // 2. DATA & LOGIKA ANGGARAN
-        // ==========================================
-        function toggleAturAnggaran(e) {
-            e.preventDefault();
-            const form = document.getElementById('form-anggaran');
-            form.classList.toggle('hidden');
-            form.classList.toggle('flex');
-        }
-
-        async function hapusAnggaran(id) {
-            showLoading();
-            await supabaseClient.from('anggaran').delete().eq('id', id);
-            await fetchSemuaData();
-        }
-
-        document.getElementById('form-anggaran').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const nama = document.getElementById('input-nama-anggaran').value;
-            const nominal = parseInt(document.getElementById('input-nominal-anggaran').value);
-            const warna = document.getElementById('input-warna-anggaran').value;
-            if(nama && nominal > 0) {
-                showLoading();
-                await supabaseClient.from('anggaran').insert([{ nama, nominal, warna }]);
-                document.getElementById('input-nama-anggaran').value = '';
-                document.getElementById('input-nominal-anggaran').value = '';
-                await fetchSemuaData();
-            }
-        });
-
+        // ANGGARAN
+        document.getElementById('form-anggaran').addEventListener('submit', async (e) => { e.preventDefault(); showLoading(); await supabaseClient.from('anggaran').insert([{ nama: document.getElementById('input-nama-anggaran').value, nominal: parseInt(document.getElementById('input-nominal-anggaran').value), warna: document.getElementById('input-warna-anggaran').value }]); document.getElementById('input-nama-anggaran').value=''; document.getElementById('input-nominal-anggaran').value=''; showToast('Alokasi dana diset! 💰'); await fetchSemuaData(); });
+        async function hapusAnggaran(id) { showLoading(); await supabaseClient.from('anggaran').delete().eq('id', id); await fetchSemuaData(); }
         function renderAnggaran() {
-            const listAnggaran = document.getElementById('list-anggaran');
-            listAnggaran.innerHTML = '';
-            let totalAnggaranRencana = 0;
-
-            if(dataAnggaran.length === 0) listAnggaran.innerHTML = `<p class="text-xs text-textMuted py-2">Belum ada rincian anggaran.</p>`;
-
-            dataAnggaran.forEach((item, index) => {
-                totalAnggaranRencana += item.nominal;
-                let formatJuta = (item.nominal / 1000000).toString().replace('.', ',');
-                let borderClass = index === 0 ? 'pb-3' : 'border-t border-gray-100 py-3';
-
-                listAnggaran.innerHTML += `
-                    <div class="flex justify-between items-center text-sm ${borderClass} group">
-                        <div class="flex items-center gap-3 text-textDark">
-                            <span class="w-2 h-2 rounded-full" style="background-color: ${item.warna}"></span>
-                            ${item.nama}
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="text-textMuted text-xs font-medium">Rp${formatJuta} jt</div>
-                            <button onclick="hapusAnggaran(${item.id})" class="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all" title="Hapus rincian">${trashIcon}</button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            let totalJt = (totalAnggaranRencana / 1000000).toString().replace('.', ',');
-            let targetJt = TARGET_DANA / 1000000;
-            let sisaNominal = TARGET_DANA - totalAnggaranRencana;
-            let sisaJt = (sisaNominal / 1000000).toString().replace('.', ',');
-            
-            document.getElementById('teks-total-anggaran').innerText = `Rp ${totalJt} jt`;
-            document.getElementById('teks-sisa-anggaran').innerText = `dari Rp${targetJt} jt • sisa Rp${sisaJt} jt`;
-
-            let persentaseAnggaran = (totalAnggaranRencana / TARGET_DANA) * 100;
-            if(persentaseAnggaran > 100) persentaseAnggaran = 100;
-            setTimeout(() => { document.getElementById('bar-anggaran').style.width = `${persentaseAnggaran}%`; }, 100);
+            let list = document.getElementById('list-anggaran'), total = 0; list.innerHTML = ''; if(dataAnggaran.length === 0) list.innerHTML = `<p class="text-[10px] md:text-xs text-textMuted py-4 text-center border border-dashed rounded-lg mt-2">Belum ada rincian. Mau atur budget Katering dulu? 📝</p>`;
+            dataAnggaran.forEach((item, i) => { total += item.nominal; list.innerHTML += `<div class="flex justify-between items-center text-sm ${i===0?'pb-2':'border-t border-gray-100 py-2'} hover:bg-gray-50 px-2 -mx-2 rounded transition-colors"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full transition-transform hover:scale-125" style="background-color: ${item.warna}"></span>${item.nama}</div><div class="flex items-center gap-2"><div class="text-xs text-textMuted">Rp${(item.nominal/1000000).toString().replace('.',',')} jt</div><button onclick="hapusAnggaran(${item.id})" class="text-gray-300 hover:text-red-500 transition-colors">${trashIcon}</button></div></div>`; });
+            document.getElementById('teks-total-anggaran').innerText = `Rp ${(total/1000000).toString().replace('.',',')} jt`; document.getElementById('teks-sisa-anggaran').innerText = `sisa Rp${((TARGET_DANA-total)/1000000).toString().replace('.',',')} jt`; setTimeout(() => { document.getElementById('bar-anggaran').style.width = `${Math.min((total/TARGET_DANA)*100, 100)}%`; }, 100);
         }
 
-        // ==========================================
-        // 3. DATA & LOGIKA CHECKLIST
-        // ==========================================
-        function toggleLihatSemuaChecklist(e) {
-            e.preventDefault();
-            showAllChecklist = !showAllChecklist;
-            document.getElementById('btn-lihat-semua').innerText = showAllChecklist ? 'Tutup sebagian \u2191' : 'Lihat semua \u2192';
-            renderChecklist();
-        }
-
-        async function toggleChecklist(id, currentStatus) {
-            showLoading();
-            await supabaseClient.from('checklist').update({ selesai: !currentStatus }).eq('id', id);
-            await fetchSemuaData();
-        }
-
-        async function hapusChecklist(id) {
-            showLoading();
-            await supabaseClient.from('checklist').delete().eq('id', id);
-            await fetchSemuaData();
-        }
-
-        document.getElementById('form-checklist').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const tugas = document.getElementById('input-tugas').value;
-            const kategori = document.getElementById('input-kategori').value;
-            if(tugas) {
-                showLoading();
-                await supabaseClient.from('checklist').insert([{ tugas, waktu: 'Baru saja ditambahkan', kategori, selesai: false }]);
-                document.getElementById('input-tugas').value = '';
-                await fetchSemuaData();
-            }
-        });
-
+        // CHECKLIST
+        document.getElementById('form-checklist').addEventListener('submit', async (e) => { e.preventDefault(); showLoading(); await supabaseClient.from('checklist').insert([{ tugas: document.getElementById('input-tugas').value, waktu: 'Baru saja', kategori: document.getElementById('input-kategori').value, selesai: false }]); document.getElementById('input-tugas').value=''; showToast('Tugas baru dicatat! 📝'); await fetchSemuaData(); });
+        async function hapusChecklist(id) { showLoading(); await supabaseClient.from('checklist').delete().eq('id', id); await fetchSemuaData(); }
+        async function toggleChecklist(id, status) { showLoading(); await supabaseClient.from('checklist').update({ selesai: !status }).eq('id', id); showToast(!status ? 'Mantap! Tugas beres! ✅' : 'Tugas batal selesai 😅', !status ? '🎉' : '⏳'); await fetchSemuaData(); }
         function renderChecklist() {
-            const listChecklist = document.getElementById('list-checklist');
-            listChecklist.innerHTML = '';
-            let tugasSelesai = 0;
-            
-            dataChecklist.forEach(item => { if(item.selesai) tugasSelesai++; });
-            const dataToRender = showAllChecklist ? dataChecklist : dataChecklist.slice(0, 3);
-            
-            if(dataToRender.length === 0) listChecklist.innerHTML = `<p class="text-xs text-textMuted">Belum ada tugas.</p>`;
-
-            dataToRender.forEach((item, index) => {
-                let badgeClass = item.kategori === 'Prioritas' ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600';
-                let textClass = item.selesai ? 'line-through text-gray-400' : 'text-textDark';
-
-                listChecklist.innerHTML += `
-                    <div class="flex items-start justify-between group">
-                        <label class="flex items-start gap-3 cursor-pointer flex-1">
-                            <input type="checkbox" ${item.selesai ? 'checked' : ''} onchange="toggleChecklist(${item.id}, ${item.selesai})" class="mt-1 w-4 h-4 rounded border-gray-300 text-accentRed focus:ring-accentRed cursor-pointer">
-                            <div>
-                                <div class="text-sm ${textClass} transition-colors">${item.tugas}</div>
-                                <div class="flex items-center gap-2 mt-1">
-                                    <span class="text-xs text-textMuted">${item.waktu}</span>
-                                    <span class="text-[10px] px-1.5 py-0.5 rounded font-medium ${badgeClass}">${item.kategori}</span>
-                                </div>
-                            </div>
-                        </label>
-                        <button onclick="hapusChecklist(${item.id})" class="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all ml-2 mt-1" title="Hapus tugas">${trashIcon}</button>
-                    </div>
-                    ${index !== dataToRender.length - 1 ? '<hr class="border-gray-100 my-3">' : ''}
-                `;
-            });
-
-            document.getElementById('stat-checklist').innerHTML = `${tugasSelesai} / ${dataChecklist.length}`;
+            let list = document.getElementById('list-checklist'), beres = 0; list.innerHTML = ''; dataChecklist.forEach(i => { if(i.selesai) beres++; }); if(dataChecklist.length === 0) list.innerHTML = `<p class="text-[10px] md:text-xs text-textMuted py-4 text-center border border-dashed rounded-lg mt-2">Belum ada tugas. Pikirin yang deket-deket aja dulu~ ☕</p>`;
+            let renderData = showAllChecklist ? dataChecklist : dataChecklist.slice(0,3);
+            renderData.forEach((item, i) => { list.innerHTML += `<div class="flex items-start justify-between group hover:bg-gray-50 p-2 -mx-2 rounded transition-colors"><label class="flex items-start gap-2 cursor-pointer flex-1"><input type="checkbox" ${item.selesai?'checked':''} onchange="toggleChecklist(${item.id}, ${item.selesai})" class="mt-1 w-4 h-4 text-accentRed transition-colors"><div class="${item.selesai?'line-through text-gray-400':''} text-sm transition-all">${item.tugas} <div class="text-[10px] text-textMuted mt-1"><span class="px-1 py-0.5 rounded ${item.kategori==='Prioritas'?'bg-red-50 text-red-600':'bg-green-50 text-green-600'}">${item.kategori}</span></div></div></label><button onclick="hapusChecklist(${item.id})" class="text-gray-300 hover:text-red-500 mt-1 opacity-0 group-hover:opacity-100 transition-all">${trashIcon}</button></div>${i!==renderData.length-1?'<hr class="border-gray-100 my-1">':''}`; });
+            document.getElementById('stat-checklist').innerHTML = `${beres} / ${dataChecklist.length}`;
         }
 
-        // ==========================================
-        // INIT SAAT WEB DIBUKA
-        // ==========================================
+        // INIT
+        updateSapaan(); // Set Sapaan Pagi/Siang/Sore
         document.getElementById('tgl-nabung').valueAsDate = new Date();
-        fetchSemuaData(); // Tarik data dari DB
+        fetchSemuaData();
     </script>
 </body>
 </html>
