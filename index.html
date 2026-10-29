@@ -64,8 +64,8 @@
 </head>
 <body id="body-theme" class="bg-bgMain text-textDark font-sans flex h-screen overflow-hidden relative animate-fade-in transition-colors duration-500">
 
-    <!-- BGM Audio Element (GANTI LINK MP3 DI BAWAH INI DENGAN LAGU PILIHANMU) -->
-    <audio id="bgm-player" src="song.mp3" loop></audio>
+    <!-- AUDIO PLAYER UTAMA (TIDAK ADA SRC DULU KARENA DIATUR JAVASCRIPT) -->
+    <audio id="bgm-player"></audio>
 
     <div id="toast-container" class="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 md:left-auto md:right-6 md:translate-x-0 z-[999] flex flex-col gap-3 pointer-events-none w-[90%] md:w-80"></div>
 
@@ -176,12 +176,37 @@
 
         <!-- Pill Tombol -->
         <div class="flex items-center gap-0.5 bg-white/80 backdrop-blur-md px-1.5 py-1.5 rounded-2xl shadow-sm border border-gray-100">
-            <!-- Music Player Button -->
-            <button onclick="toggleMusic()" id="btn-music" class="p-2 text-textMuted hover:text-accentRed hover:bg-accentPink/50 rounded-xl transition-all" title="Putar Lagu Kita">
-                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
-                </svg>
-            </button>
+            
+            <!-- Music Switcher / Player -->
+            <div class="relative group">
+                <button onclick="toggleMusic()" id="btn-music" class="p-2 text-textMuted hover:text-accentRed hover:bg-accentPink/50 rounded-xl transition-all" title="Putar Lagu Kita">
+                    <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                    </svg>
+                </button>
+                
+                <!-- Dropdown Music Controls -->
+                <div class="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                    <div class="w-48 bg-white border border-gray-100 rounded-xl shadow-lg flex flex-col p-3 gap-3 relative overflow-hidden">
+                        <div class="text-[10px] text-center font-bold text-accentRed truncate tracking-wider uppercase" id="teks-judul-lagu">Menunggu...</div>
+                        <div class="flex items-center justify-center gap-1">
+                            <button onclick="playPrev()" class="p-1.5 hover:bg-gray-100 rounded-lg text-textMuted hover:text-textDark transition-colors" title="Sebelumnya">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg>
+                            </button>
+                            <button onclick="toggleMusic()" class="p-2 bg-accentPink text-accentRed rounded-full hover:scale-105 transition-transform" id="btn-play-pause">
+                                <svg class="w-4 h-4" id="icon-play" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                <svg class="w-4 h-4 hidden" id="icon-pause" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+                            </button>
+                            <button onclick="playNext()" class="p-1.5 hover:bg-gray-100 rounded-lg text-textMuted hover:text-textDark transition-colors" title="Selanjutnya">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
+                            </button>
+                            <button onclick="toggleRepeat()" id="btn-repeat" class="p-1.5 hover:bg-gray-100 rounded-lg text-gray-300 hover:text-textDark transition-colors ml-1" title="Ulangi Lagu">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <!-- Theme Switcher dengan Jembatan Hover -->
             <div class="relative group">
@@ -206,7 +231,7 @@
     <main class="flex-1 h-full overflow-y-auto p-4 md:p-6 lg:p-12 pb-24" id="main-scroll">
         <!-- Header -->
         <div class="flex justify-between items-start mb-6 md:mb-8 animate-fade-in gap-4">
-            <div class="flex flex-col">
+            <div class="flex flex-col mt-8 md:mt-0"> <!-- Tambah mt-8 di hp agar gak ketutup tombol float -->
                 <span id="teks-breadcrumb" class="font-medium text-textDark mb-1">Ringkasan</span>
                 <span id="teks-sapaan" class="text-[11px] md:text-xs font-semibold text-accentRed flex items-center gap-2">
                     Halo, Rikki & Puri!
@@ -500,19 +525,10 @@
         let hasConfettiDana = false;
         let hasConfettiChecklist = false;
 
-        // ================= FITUR BARU: THEME & MUSIC & SLIDER =================
+        // ================= FITUR BARU: THEME & SLIDER =================
         function setTheme(theme) {
             document.getElementById('body-theme').className = `bg-bgMain text-textDark font-sans flex h-screen overflow-hidden relative animate-fade-in transition-colors duration-500 ${theme === 'default' ? '' : 'theme-' + theme}`;
             showToast(`Tema warna diubah menjadi ${theme === 'default' ? 'Maroon' : theme}.`);
-        }
-
-        let isMusicPlaying = false;
-        function toggleMusic() {
-            const audio = document.getElementById('bgm-player');
-            const btn = document.getElementById('btn-music');
-            if (isMusicPlaying) { audio.pause(); btn.classList.remove('text-accentRed', 'bg-accentPink/50'); } 
-            else { audio.play().catch(e => showToast("Browser memblokir autoplay audio.")); btn.classList.add('text-accentRed', 'bg-accentPink/50'); }
-            isMusicPlaying = !isMusicPlaying;
         }
 
         // SLIDER FOTO
@@ -582,11 +598,22 @@
             document.getElementById('teks-quote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
         }
 
+        // FUNGSI TOAST (NOTIF) YANG SUDAH DIPERBAIKI UNTUK MOBILE
         function showToast(msg) {
             const cont = document.getElementById('toast-container'); const toast = document.createElement('div');
-            toast.className = 'bg-white border border-cardBorder shadow-lg rounded-xl p-3 flex items-center gap-3 animate-toast w-full pointer-events-auto';
+            
+            // pointer-events-none ditambahkan agar sentuhan bisa tembus ke UI di bawahnya
+            toast.className = 'bg-white border border-cardBorder shadow-lg rounded-xl p-3 flex items-center gap-3 animate-toast w-full pointer-events-none';
+            
             toast.innerHTML = `<div class="w-8 h-8 rounded-full bg-accentPink text-accentRed flex items-center justify-center font-serif text-[10px] font-bold shrink-0 border border-cardBorder">R&P</div><div class="flex flex-col"><span class="text-[9px] text-textMuted font-medium uppercase tracking-wider mb-0.5">Notifikasi Sistem</span><span class="text-xs font-medium text-textDark">${msg}</span></div>`;
-            cont.appendChild(toast); setTimeout(() => { toast.remove(); }, 3500);
+            cont.appendChild(toast); 
+            
+            // Bersihkan elemen sampai hilang dari sistem (menghindari error di perangkat mobile)
+            setTimeout(() => { 
+                if(toast.parentNode) {
+                    toast.parentNode.removeChild(toast); 
+                }
+            }, 3500);
         }
 
         function updatePangkatDanConfetti() {
@@ -783,8 +810,106 @@
             updatePangkatDanConfetti(); 
         }
 
-        // INIT
-        updateSapaan(); document.getElementById('tgl-nabung').valueAsDate = new Date(); fetchSemuaData();
+        // ================= FITUR MUSIK & PLAYLIST BARU =================
+        
+        // Tulis daftar MP3 yang sudah disiapkan di dalam folder komputermu di array ini
+        const playlist = ['Raim - Bersenja Gurau.mp3', 'Kahitna - Menikahimu.mp3', 'Perunggu - Berhasil.mp3', 'Akad - Payung Teduh.mp3']; 
+
+        let currentSongIndex = 0;
+        let isMusicPlaying = false;
+        let isRepeat = false;
+
+        function formatSongName(filename) {
+            // Hilangkan tulisan .mp3 dan ubah garis bawah/strip jadi spasi agar judul rapi
+            return filename.replace('.mp3', '').replace(/[-_]/g, ' ');
+        }
+
+        function playAudio(showNotif = true) {
+            const audio = document.getElementById('bgm-player');
+            
+            // Set file lagu baru jika belum ada atau sedang berganti lagu
+            if (!audio.src.includes(playlist[currentSongIndex])) {
+                audio.src = playlist[currentSongIndex];
+            }
+
+            audio.play().then(() => {
+                isMusicPlaying = true;
+                
+                // Update tampilan tombol Play menjadi Pause
+                document.getElementById('btn-music').classList.add('text-accentRed', 'bg-accentPink/50');
+                document.getElementById('icon-play').classList.add('hidden');
+                document.getElementById('icon-pause').classList.remove('hidden');
+                
+                // Ubah teks judul lagu di dropdown
+                let songName = formatSongName(playlist[currentSongIndex]);
+                document.getElementById('teks-judul-lagu').innerText = songName;
+                
+                // Tampilkan pop-up notifikasi (kecuali fitur repeat bekerja diam-diam)
+                if(showNotif) showToast(`🎵 Memutar: ${songName}`);
+            }).catch(e => {
+                console.log("Autoplay ditahan oleh browser sampai kamu menekan area mana saja.");
+            });
+        }
+
+        function toggleMusic() {
+            const audio = document.getElementById('bgm-player');
+            if (isMusicPlaying) {
+                audio.pause();
+                isMusicPlaying = false;
+                
+                // Update tampilan Pause jadi Play
+                document.getElementById('btn-music').classList.remove('text-accentRed', 'bg-accentPink/50');
+                document.getElementById('icon-play').classList.remove('hidden');
+                document.getElementById('icon-pause').classList.add('hidden');
+            } else {
+                playAudio(true);
+            }
+        }
+
+        function playNext() {
+            currentSongIndex = (currentSongIndex + 1) % playlist.length;
+            playAudio(true);
+        }
+
+        function playPrev() {
+            currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
+            playAudio(true);
+        }
+
+        function toggleRepeat() {
+            isRepeat = !isRepeat;
+            const btn = document.getElementById('btn-repeat');
+            if(isRepeat) {
+                btn.classList.replace('text-gray-300', 'text-accentRed');
+                showToast("🔂 Ulangi lagu diaktifkan.");
+            } else {
+                btn.classList.replace('text-accentRed', 'text-gray-300');
+                showToast("➡️ Putar berurutan diaktifkan.");
+            }
+        }
+
+        // Jalankan event jika lagu saat ini habis
+        document.getElementById('bgm-player').addEventListener('ended', () => {
+            if (isRepeat) {
+                document.getElementById('bgm-player').currentTime = 0;
+                playAudio(false); // kalau ngulang ga usah show notif terus-terusan
+            } else {
+                playNext(); // kalau gak repeat, lanjut lagu sebelahnya
+            }
+        });
+
+        // ================= INIT =================
+        updateSapaan(); 
+        document.getElementById('tgl-nabung').valueAsDate = new Date(); 
+        fetchSemuaData();
+
+        // Trik Autoplay: Putar lagu saat user pertama kali mengklik area mana saja di layar
+        document.body.addEventListener('click', function initAudio() {
+            if(!isMusicPlaying && document.getElementById('bgm-player').currentTime === 0) {
+                playAudio(true);
+            }
+            document.body.removeEventListener('click', initAudio); // Hapus eventnya biar klik-klik selanjutnya gak bentrok
+        }, { once: true });
     </script>
 </body>
 </html>
